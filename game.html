@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>SkyChord : Combat Céleste — Dragon Ball Z Kai Edition</title>
+  <title>SkyChord : Combat Céleste — Moteur Anime & Manga Original</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Cinzel:wght@700;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Cinzel:wght@700;900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -31,19 +31,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: radial-gradient(circle at center, #1e1138 0%, #05020c 100%);
+      background: radial-gradient(circle at center, #1b1238 0%, #04010a 100%);
     }
     canvas {
       display: block;
       box-shadow: 0 0 50px rgba(245, 158, 11, 0.25);
-      border-radius: 6px;
+      border-radius: 8px;
     }
-    /* Barre supérieure de navigation rapide */
+    /* Barre supérieure */
     #topBar {
       position: absolute;
-      top: 12px;
-      left: 20px;
-      right: 20px;
+      top: 10px;
+      left: 16px;
+      right: 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -53,15 +53,16 @@
     .top-left, .top-right {
       pointer-events: auto;
       display: flex;
-      gap: 10px;
+      gap: 8px;
+      align-items: center;
     }
     .game-btn {
-      background: rgba(15, 10, 30, 0.75);
+      background: rgba(15, 10, 30, 0.85);
       border: 1px solid rgba(251, 191, 36, 0.45);
       color: #fbbf24;
-      padding: 8px 16px;
+      padding: 7px 14px;
       border-radius: 20px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       cursor: pointer;
       backdrop-filter: blur(8px);
@@ -75,38 +76,133 @@
       background: #f59e0b;
       color: #000;
       box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
-      transform: scale(1.05);
+      transform: scale(1.04);
     }
+    .select-btn {
+      background: rgba(20, 15, 40, 0.85);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      outline: none;
+    }
+
     /* Sélecteur de mode rapide */
     #modeSelector {
       position: absolute;
-      bottom: 16px;
+      bottom: 12px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 8px;
+      gap: 6px;
       z-index: 100;
-      background: rgba(10, 5, 20, 0.85);
-      padding: 6px 12px;
+      background: rgba(10, 5, 20, 0.88);
+      padding: 5px 10px;
       border-radius: 30px;
-      border: 1px solid rgba(251, 191, 36, 0.3);
+      border: 1px solid rgba(251, 191, 36, 0.35);
       backdrop-filter: blur(10px);
     }
     .mode-tab {
       background: transparent;
       border: none;
       color: #94a3b8;
-      padding: 6px 14px;
+      padding: 5px 12px;
       border-radius: 20px;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
     }
     .mode-tab.active, .mode-tab:hover {
-      background: rgba(245, 158, 11, 0.2);
+      background: rgba(245, 158, 11, 0.25);
       color: #fbbf24;
       border: 1px solid rgba(245, 158, 11, 0.6);
+    }
+
+    /* Modal Liste des Coups (Movelist) */
+    #moveListModal {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-content {
+      background: #0f0a1e;
+      border: 2px solid #f59e0b;
+      border-radius: 24px;
+      max-width: 900px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 28px;
+      box-shadow: 0 0 50px rgba(245, 158, 11, 0.4);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+    .modal-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.8rem;
+      color: #fbbf24;
+      font-weight: 900;
+    }
+    .close-btn {
+      background: transparent;
+      border: none;
+      color: #ef4444;
+      font-size: 28px;
+      cursor: pointer;
+      font-weight: 900;
+    }
+    .moves-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .move-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .move-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .move-badge {
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .move-name {
+      font-weight: 800;
+      font-size: 1rem;
+      color: #ffffff;
+    }
+    .move-desc {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.5;
     }
   </style>
 </head>
@@ -117,37 +213,155 @@
     <div id="topBar">
       <div class="top-left">
         <a href="index.html" class="game-btn">← Retour au Site</a>
+        <button class="game-btn" onclick="openMoveList()">📋 Liste des Coups</button>
         <button id="fullscreenBtn" class="game-btn" onclick="toggleFullscreen()">⛶ Plein Écran</button>
       </div>
+
       <div class="top-right">
-        <button class="game-btn" onclick="game.startMatch(game.mode)">↻ Recommencer</button>
+        <!-- Sélecteur de Héros P1 -->
+        <span style="font-size: 12px; font-weight: 700; color: #fbbf24;">Joueur 1 :</span>
+        <select id="p1Select" class="select-btn" onchange="changeFighters()">
+          <option value="sola" selected>SOLA (Solaire)</option>
+          <option value="aether">AETHER (Foudre)</option>
+          <option value="nox">NOX (Ombre)</option>
+          <option value="titan">TITAN KRONOS (Boss)</option>
+        </select>
+
+        <span style="font-size: 12px; font-weight: 700; color: #38bdf8;">Adversaire :</span>
+        <select id="p2Select" class="select-btn" onchange="changeFighters()">
+          <option value="aether" selected>AETHER (IA)</option>
+          <option value="sola">SOLA (IA)</option>
+          <option value="nox">NOX (IA)</option>
+          <option value="titan">TITAN KRONOS (IA)</option>
+        </select>
+
+        <button class="game-btn" onclick="changeFighters()">↻ Relancer</button>
       </div>
     </div>
 
-    <!-- Le canevas de jeu -->
+    <!-- Le canevas de combat -->
     <canvas id="battleCanvas"></canvas>
 
-    <!-- Sélecteur rapide des modes de combat -->
+    <!-- Sélecteur rapide des modes -->
     <div id="modeSelector">
-      <button class="mode-tab active" onclick="switchMode('versus', this)">Duel 1v1</button>
-      <button class="mode-tab" onclick="switchMode('histoire', this)">Histoire & Cinématiques</button>
-      <button class="mode-tab" onclick="switchMode('eclair', this)">⚡ Mort Subite</button>
-      <button class="mode-tab" onclick="switchMode('titan', this)">☠ Défi Titan</button>
+      <button class="mode-tab active" onclick="switchMode('versus', this)">⚔️ Duel 1v1</button>
+      <button class="mode-tab" onclick="switchMode('histoire', this)">📖 Histoire & Cinématiques</button>
+      <button class="mode-tab" onclick="switchMode('eclair', this)">⚡ Mort Subite (300%)</button>
+      <button class="mode-tab" onclick="switchMode('titan', this)">☠ Défi Titan Colosse</button>
+    </div>
+
+    <!-- Modal Liste des Coups -->
+    <div id="moveListModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">⚔️ Guide des Coups & Attaques Célestes</h2>
+          <button class="close-btn" onclick="closeMoveList()">&times;</button>
+        </div>
+
+        <div style="margin-bottom: 20px; font-size: 0.95rem; color: #cbd5e1; line-height: 1.6;">
+          Chaque combattant possède un style de combat unique inspiré des mangas d'arts martiaux : combos 3 coups distincts, coups Smash chargés avec jauge circulaire de Ki, tirs spécifiques, attaques aériennes plongeantes, brise-garde et Contre Parfait.
+        </div>
+
+        <div class="moves-grid">
+          <!-- Carte 1 : SOLA -->
+          <div class="move-card" style="border-color: rgba(245, 158, 11, 0.4);">
+            <div class="move-card-header">
+              <span class="move-badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">SOLA</span>
+              <span class="move-name">Guerrière Solaire du Zénith</span>
+            </div>
+            <p class="move-desc">
+              • <strong>Combo 3 Coups</strong> : Jab Solaire ➔ Double Coup Zénith ➔ Rising Sol Uppercut propulsant en l'air.<br>
+              • <strong>Coup Chargé (Smash)</strong> : Giga Smash Solaire avec déflagration Supernova.<br>
+              • <strong>Tir Spécial (Bouton TIR)</strong> : Rayon Solaire Nova continu qui traverse l'arène.<br>
+              • <strong>Attaque Aérienne</strong> : Météore Solaire Plongeant vers le sol.<br>
+              • <strong>Ultra Céleste</strong> : Éveil Solaire Suprême (60 dégâts massifs).
+            </p>
+          </div>
+
+          <!-- Carte 2 : AETHER -->
+          <div class="move-card" style="border-color: rgba(6, 182, 212, 0.4);">
+            <div class="move-card-header">
+              <span class="move-badge" style="background: rgba(6, 182, 212, 0.2); color: #38bdf8;">AETHER</span>
+              <span class="move-name">Dieu Céleste de la Foudre</span>
+            </div>
+            <p class="move-desc">
+              • <strong>Combo 3 Coups</strong> : Frappe Tonnerre ➔ Coude Foudroyant ➔ Volt Kick électrostatique.<br>
+              • <strong>Coup Chargé (Smash)</strong> : Raikiri Foudroyant perçant avec traînée d'éclairs SSJ2.<br>
+              • <strong>Tir Spécial (Bouton TIR)</strong> : 3 Lances de Foudre Raijin rapides en éventail.<br>
+              • <strong>Attaque Aérienne</strong> : Volt Drill tournoyant horizontalement.<br>
+              • <strong>Ultra Céleste</strong> : Jugement Divin du Temple de l'Éclair.
+            </p>
+          </div>
+
+          <!-- Carte 3 : NOX -->
+          <div class="move-card" style="border-color: rgba(139, 92, 246, 0.4);">
+            <div class="move-card-header">
+              <span class="move-badge" style="background: rgba(139, 92, 246, 0.2); color: #c084fc;">NOX</span>
+              <span class="move-name">Ombre Astrale du Silence</span>
+            </div>
+            <p class="move-desc">
+              • <strong>Combo 3 Coups</strong> : Lame du Néant ➔ Tranchant Spectral ➔ Eclipse Spin Nova.<br>
+              • <strong>Coup Chargé (Smash)</strong> : Faux de l'Éclipse tranchant l'espace.<br>
+              • <strong>Tir Spécial (Bouton TIR)</strong> : Singularité du Néant aspirant l'adversaire avant d'exploser.<br>
+              • <strong>Attaque Aérienne</strong> : Chute de l'Ombre Perforante.<br>
+              • <strong>Ultra Céleste</strong> : Effondrement Total du Trou Noir.
+            </p>
+          </div>
+
+          <!-- Carte 4 : TITAN KRONOS -->
+          <div class="move-card" style="border-color: rgba(239, 68, 68, 0.4);">
+            <div class="move-card-header">
+              <span class="move-badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171;">TITAN KRONOS</span>
+              <span class="move-name">Colosse Primordial</span>
+            </div>
+            <p class="move-desc">
+              • <strong>Super Armure</strong> : Résiste aux reculs normaux.<br>
+              • <strong>Combo 3 Coups</strong> : Poing Sismique ➔ Revers Magmatique ➔ Fracas Colossal au Sol.<br>
+              • <strong>Coup Chargé (Smash)</strong> : Écrasement Titanesque avec double onde de choc bilatérale.<br>
+              • <strong>Tir Spécial (Bouton TIR)</strong> : Météore de Roche Volcanique en cloche lourde.<br>
+              • <strong>Ultra Céleste</strong> : Cataclysme Tellurique Mondial.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top: 24px; text-align: center;">
+          <button class="game-btn" onclick="closeMoveList()" style="padding: 10px 24px; font-size: 15px;">Fermer le Guide</button>
+        </div>
+      </div>
     </div>
   </div>
 
   <script src="skychord_game.js"></script>
   <script>
     let game = null;
+    let currentMode = 'versus';
+
     window.addEventListener('load', () => {
       game = new SkyChordGame('battleCanvas');
-      game.startMatch('versus', 'sola', 'aether');
+      changeFighters();
     });
 
+    function changeFighters() {
+      const p1 = document.getElementById('p1Select').value;
+      const p2 = document.getElementById('p2Select').value;
+      if (game) {
+        game.startMatch(currentMode, p1, p2);
+      }
+    }
+
     function switchMode(mode, el) {
+      currentMode = mode;
       document.querySelectorAll('.mode-tab').forEach(b => b.classList.remove('active'));
       if (el) el.classList.add('active');
-      if (game) game.startMatch(mode, 'sola', mode === 'titan' ? 'titan' : 'aether');
+      changeFighters();
+    }
+
+    function openMoveList() {
+      document.getElementById('moveListModal').style.display = 'flex';
+    }
+
+    function closeMoveList() {
+      document.getElementById('moveListModal').style.display = 'none';
     }
 
     function toggleFullscreen() {

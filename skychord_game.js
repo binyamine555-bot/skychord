@@ -1,11 +1,30 @@
 /**
- * SKYCHORD: COMBAT CÉLESTE — Moteur de Combat Anime Dragon Ball Z Kai
- * - Qualité Graphique DBZ Kai : Encrage cel-shading, flammes de Ki montantes, éclairs SSJ2, lignes de vitesse, étoiles de choc.
- * - Modes de jeu : Mode Histoire avec cinématiques animées, Mort Subite (300%), Défi Titan Colosse, Survie Vagues, Versus 1v1.
- * - Commandes tactiles mobiles adaptées à 5 touches : FRAPPE (tap=combo, maintien=Smash avec jauge de Ki), SPÉ, SAUT, GARDE, PRISE.
- * - Moteur audio Web Audio API autonome : bruitages d'impact, rayons d'énergie, charges de Ki et thèmes orchestraux.
+ * SKYCHORD: COMBAT CÉLESTE — MOTEUR DE COMBAT MANGA & ANIME ORIGINAL (QUALITÉ DBZ KAI)
+ * 
+ * - Graphismes Anime Originaux Haute Qualité :
+ *   Encrage manga cel-shading noir 3.5px, anatomie et visages expressifs (yeux anime détaillés, mèches de cheveux ombrées),
+ *   vêtements dynamiques (ceintures flottantes, armures gravées), auras de Ki flamboyantes, éclairs SSJ2 et étoiles d'impact à 8 branches.
+ * 
+ * - Combattants Originaux aux Styles Uniques :
+ *   1. SOLA — Guerrière Solaire du Zénith (Combos solaires, Giga Smash incandescent, Rayon Solaire Nova multi-hit, Ultra Solaire).
+ *   2. AETHER — Dieu Céleste de la Foudre (Vitesse pure, Raikiri Foudroyant, 3 Lances Raijin téléguidées, Suplex Électrique).
+ *   3. NOX — Ombre Astrale du Silence (Lames du vide, Singularité gravitationnelle aspirante, Faux de l'Éclipse).
+ *   4. TITAN KRONOS — Colosse Primordial (Super Armure, Écrasement tellurique, Météore de Roche Volcanique, Choc Sismique).
+ * 
+ * - Système de Combat Évolué :
+ *   • Combo Normal 3 Coups spécifique à chaque personnage (Tap FRAPPE).
+ *   • Coup Chargé Smash avec jauge de Ki circulaire, particules aspirées et déflagration spectaculaire (Maintien FRAPPE).
+ *   • Tir / Attaque Spéciale propre à chaque combattant avec trajectoire et physique distinctes (Bouton TIR).
+ *   • Attaque Aérienne plongeante / tournoyante (Saut + Frappe).
+ *   • Prise Spécifique au corps-à-corps et Parade Parfaite (timing précis sur GARDE) avec Contre garanti.
+ *   • Jauge d'Harmonie Céleste & Déchaînement ULTRA cinématique avec portrait manga en gros plan.
+ * 
+ * - Commandes Tactiles Mobiles Fluides à 5 Touches & Support Clavier Complet.
  */
 
+// ==========================================
+// 1. MOTEUR AUDIO WEB AUDIO API HARMONIQUE
+// ==========================================
 class SkyChordAudio {
   constructor() {
     this.ctx = null;
@@ -22,48 +41,64 @@ class SkyChordAudio {
     }
   }
 
-  // Son de frappe punch / impact
-  punch(heavy = false) {
+  // Bruitage de frappe adapté selon la nature du coup
+  punch(type = 'normal', isCrit = false) {
     if (!this.ctx) return;
     const t = this.ctx.currentTime;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
-    osc.type = heavy ? 'sawtooth' : 'triangle';
-    osc.frequency.setValueAtTime(heavy ? 140 : 220, t);
-    osc.frequency.exponentialRampToValueAtTime(30, t + (heavy ? 0.22 : 0.12));
-    gain.gain.setValueAtTime(heavy ? 0.8 : 0.45, t);
-    gain.gain.exponentialRampToValueAtTime(0.01, t + (heavy ? 0.22 : 0.12));
+
+    if (type === 'electric') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(450, t);
+      osc.frequency.exponentialRampToValueAtTime(80, t + 0.18);
+    } else if (type === 'void') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(260, t);
+      osc.frequency.exponentialRampToValueAtTime(40, t + 0.22);
+    } else if (type === 'rock') {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(110, t);
+      osc.frequency.exponentialRampToValueAtTime(25, t + 0.28);
+    } else {
+      osc.type = isCrit ? 'sawtooth' : 'triangle';
+      osc.frequency.setValueAtTime(isCrit ? 160 : 240, t);
+      osc.frequency.exponentialRampToValueAtTime(35, t + (isCrit ? 0.24 : 0.12));
+    }
+
+    gain.gain.setValueAtTime(isCrit ? 0.85 : 0.45, t);
+    gain.gain.exponentialRampToValueAtTime(0.01, t + (isCrit ? 0.24 : 0.12));
     osc.connect(gain);
     gain.connect(this.ctx.destination);
     osc.start(t);
-    osc.stop(t + (heavy ? 0.25 : 0.15));
+    osc.stop(t + (isCrit ? 0.26 : 0.14));
 
-    if (heavy) {
-      // Bruit blanc d'impact explosif
-      const bufferSize = this.ctx.sampleRate * 0.18;
-      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+    // Déflagration d'impact explosive pour les coups puissants
+    if (isCrit) {
+      const bSize = Math.floor(this.ctx.sampleRate * 0.2);
+      const buffer = this.ctx.createBuffer(1, bSize, this.ctx.sampleRate);
       const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.3));
+      for (let i = 0; i < bSize; i++) data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bSize * 0.25));
       const noise = this.ctx.createBufferSource();
       noise.buffer = buffer;
-      const noiseGain = this.ctx.createGain();
-      noiseGain.gain.setValueAtTime(0.5, t);
-      noiseGain.gain.linearRampToValueAtTime(0.01, t + 0.18);
-      noise.connect(noiseGain);
-      noiseGain.connect(this.ctx.destination);
+      const nGain = this.ctx.createGain();
+      nGain.gain.setValueAtTime(0.6, t);
+      nGain.gain.linearRampToValueAtTime(0.01, t + 0.2);
+      noise.connect(nGain);
+      nGain.connect(this.ctx.destination);
       noise.start(t);
     }
   }
 
-  // Son de charge de Ki
+  // Charge d'énergie Ki (fréquence ascendante)
   kiCharge(ratio) {
     if (!this.ctx) return;
     const t = this.ctx.currentTime;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(180 + ratio * 320, t);
-    gain.gain.setValueAtTime(0.18 * ratio, t);
+    osc.frequency.setValueAtTime(160 + ratio * 380, t);
+    gain.gain.setValueAtTime(0.15 * ratio, t);
     gain.gain.linearRampToValueAtTime(0.01, t + 0.08);
     osc.connect(gain);
     gain.connect(this.ctx.destination);
@@ -71,108 +106,220 @@ class SkyChordAudio {
     osc.stop(t + 0.08);
   }
 
-  // Rayon Ki / Kamehameha
-  kiBeam() {
+  // Tirs spécifiques
+  projectileSound(type) {
     if (!this.ctx) return;
     const t = this.ctx.currentTime;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(600, t);
-    osc.frequency.linearRampToValueAtTime(280, t + 0.4);
-    gain.gain.setValueAtTime(0.55, t);
-    gain.gain.exponentialRampToValueAtTime(0.01, t + 0.45);
+
+    if (type === 'beam') {
+      // Rayon continu Sola
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(550, t);
+      osc.frequency.linearRampToValueAtTime(320, t + 0.35);
+      gain.gain.setValueAtTime(0.5, t);
+      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.4);
+    } else if (type === 'lightning') {
+      // Foudre Aether
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(850, t);
+      osc.frequency.exponentialRampToValueAtTime(120, t + 0.25);
+      gain.gain.setValueAtTime(0.45, t);
+      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.25);
+    } else if (type === 'void') {
+      // Trou noir Nox
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(140, t);
+      osc.frequency.linearRampToValueAtTime(280, t + 0.45);
+      gain.gain.setValueAtTime(0.5, t);
+      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
+    } else {
+      // Météore Titan
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(90, t);
+      osc.frequency.exponentialRampToValueAtTime(30, t + 0.5);
+      gain.gain.setValueAtTime(0.7, t);
+      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
+    }
+
     osc.connect(gain);
     gain.connect(this.ctx.destination);
     osc.start(t);
-    osc.stop(t + 0.45);
+    osc.stop(t + 0.5);
   }
 
-  // Déflexion / Bouclier
-  shield() {
+  // Bouclier & Parade Parfaite
+  shield(isParry = false) {
     if (!this.ctx) return;
     const t = this.ctx.currentTime;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(750, t);
-    osc.frequency.exponentialRampToValueAtTime(1200, t + 0.15);
-    gain.gain.setValueAtTime(0.4, t);
-    gain.gain.exponentialRampToValueAtTime(0.01, t + 0.2);
+    osc.type = isParry ? 'triangle' : 'sine';
+    osc.frequency.setValueAtTime(isParry ? 1200 : 700, t);
+    osc.frequency.exponentialRampToValueAtTime(isParry ? 1800 : 1100, t + 0.2);
+    gain.gain.setValueAtTime(isParry ? 0.7 : 0.35, t);
+    gain.gain.exponentialRampToValueAtTime(0.01, t + (isParry ? 0.3 : 0.18));
     osc.connect(gain);
     gain.connect(this.ctx.destination);
     osc.start(t);
-    osc.stop(t + 0.2);
+    osc.stop(t + (isParry ? 0.32 : 0.2));
+  }
+
+  // Son Ultra Céleste
+  ultraSwarm() {
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime;
+    [440, 554, 659, 880].forEach((freq, idx) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(freq, t + idx * 0.05);
+      gain.gain.setValueAtTime(0.25, t + idx * 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.8);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(t + idx * 0.05);
+      osc.stop(t + 0.85);
+    });
   }
 }
 
 // ==========================================
-// PERSONNAGES CÉLESTES (DBZ KAI AESTHETICS)
+// 2. DONNÉES DES 4 COMBATTANTS CÉLESTES
 // ==========================================
 const FIGHTERS_DATA = {
   sola: {
     id: 'sola',
     name: 'SOLA',
-    title: 'Guerrière Solaire (Super Saiyan)',
+    title: 'Guerrière Solaire du Zénith',
+    archetype: 'Équilibrée • Pression & Projections Solaires',
     color: '#f59e0b',
-    auraColor: 'rgba(251, 191, 36, 0.85)',
     accent: '#fbbf24',
+    auraColor: 'rgba(251, 191, 36, 0.9)',
     hairColor: '#fde047',
+    hairShadow: '#d97706',
     giColor: '#ea580c',
-    speed: 7.2,
+    giShadow: '#9a3412',
+    sashColor: '#dc2626',
+    skinColor: '#fde68a',
+    skinShadow: '#fcd34d',
+    eyeColor: '#f59e0b',
+    speed: 7.5,
+    dashSpeed: 17,
     jumpPower: -16.5,
     maxHp: 200,
-    specialName: 'RAYON SOLAIRE NOVA'
+    shotType: 'beam',
+    soundType: 'normal',
+    moves: {
+      combo: ['Jab Solaire', 'Double Coup Zénith', 'Rising Sol Uppercut'],
+      smash: 'GIGA SMASH SOLAIRE (Supernova)',
+      special: 'RAYON SOLAIRE NOVA (Laser perçant)',
+      air: 'Météore Solaire Plongeant',
+      grab: 'Projection Solaire & Déflagration',
+      ultra: 'ÉLIXIR SOLAIRE : ÉVEIL SUPRÊME'
+    }
   },
   aether: {
     id: 'aether',
     name: 'AETHER',
     title: 'Dieu Céleste de la Foudre',
+    archetype: 'Vitesse Éclair • Foudre & Téléportation',
     color: '#06b6d4',
-    auraColor: 'rgba(34, 211, 238, 0.85)',
     accent: '#38bdf8',
+    auraColor: 'rgba(34, 211, 238, 0.9)',
     hairColor: '#e0f2fe',
-    giColor: '#1e293b',
-    speed: 8.0,
-    jumpPower: -17.0,
-    maxHp: 190,
-    specialName: 'ÉCLAIR JUGEMENT DIVIN'
+    hairShadow: '#7dd3fc',
+    giColor: '#0f172a',
+    giShadow: '#020617',
+    sashColor: '#0284c7',
+    skinColor: '#fed7aa',
+    skinShadow: '#fdba74',
+    eyeColor: '#06b6d4',
+    speed: 8.8,
+    dashSpeed: 21,
+    jumpPower: -17.5,
+    maxHp: 185,
+    shotType: 'lightning',
+    soundType: 'electric',
+    moves: {
+      combo: ['Frappe Tonnerre', 'Coude Foudroyant', 'Volt Kick Électrostatique'],
+      smash: 'RAIKIRI FOUDROYANT (Perce-Éclair)',
+      special: 'LANCES DE FOUDRE RAIJIN (3 carreaux)',
+      air: 'Volt Drill Aérien Électrique',
+      grab: 'Suplex Foudroyant Haute Tension',
+      ultra: 'JUGEMENT DIVIN DU TEMPLE DE L\'ÉCLAIR'
+    }
   },
   nox: {
     id: 'nox',
     name: 'NOX',
-    title: 'Ombre Astrale du Néant',
+    title: 'Ombre Astrale du Silence',
+    archetype: 'Ruse & Espace • Lames du Vide & Gravité',
     color: '#8b5cf6',
-    auraColor: 'rgba(168, 85, 247, 0.85)',
-    accent: '#a855f7',
-    hairColor: '#3b0764',
-    giColor: '#0f172a',
-    speed: 7.5,
+    accent: '#c084fc',
+    auraColor: 'rgba(168, 85, 247, 0.9)',
+    hairColor: '#2e1065',
+    hairShadow: '#1e1b4b',
+    giColor: '#1e1b4b',
+    giShadow: '#090514',
+    sashColor: '#7c3aed',
+    skinColor: '#f1f5f9',
+    skinShadow: '#cbd5e1',
+    eyeColor: '#a855f7',
+    speed: 8.0,
+    dashSpeed: 18,
     jumpPower: -16.0,
-    maxHp: 210,
-    specialName: 'CATACLYSME DU VIDE'
+    maxHp: 195,
+    shotType: 'void',
+    soundType: 'void',
+    moves: {
+      combo: ['Lame du Néant', 'Tranchant Spectral', 'Eclipse Spin Nova'],
+      smash: 'FAUX DE L\'ÉCLIPSE (Tranchant du vide)',
+      special: 'SINGULARITÉ DU NÉANT (Attraction & détonation)',
+      air: 'Chute de l\'Ombre Perforante',
+      grab: 'Substitution & Déchirure Astrale',
+      ultra: 'EFFONDREMENT TOTAL DU TROU NOIR'
+    }
   },
   titan: {
     id: 'titan',
     name: 'TITAN KRONOS',
-    title: 'Colosse Primordial (Raid Boss)',
+    title: 'Colosse Primordial des Origines',
+    archetype: 'Poids Lourd • Super Armure & Séismes',
     color: '#dc2626',
-    auraColor: 'rgba(239, 68, 68, 0.9)',
-    accent: '#ef4444',
+    accent: '#f87171',
+    auraColor: 'rgba(239, 68, 68, 0.95)',
     hairColor: '#450a0a',
+    hairShadow: '#1c1917',
     giColor: '#1c1917',
-    speed: 4.8,
-    jumpPower: -14.0,
-    maxHp: 500,
+    giShadow: '#0a0a0a',
+    sashColor: '#991b1b',
+    skinColor: '#78716c',
+    skinShadow: '#44403c',
+    eyeColor: '#ef4444',
     isTitan: true,
-    scale: 2.1,
+    scale: 2.15,
     superArmor: true,
-    specialName: 'SEISME D\'ANÉANTISSEMENT'
+    speed: 5.0,
+    dashSpeed: 11,
+    jumpPower: -14.2,
+    maxHp: 480,
+    shotType: 'rock',
+    soundType: 'rock',
+    moves: {
+      combo: ['Poing Sismique', 'Revers Magmatique', 'Fracas Colossal au Sol'],
+      smash: 'ÉCRASEMENT TITANESQUE (Double onde de choc)',
+      special: 'MÉTÉORE DE ROCHE VOLCANIQUE',
+      air: 'Séisme Terrestre Colossal',
+      grab: 'Étreinte Broyeuse & Projection',
+      ultra: 'CATACLYSME TELLURIQUE MONDIAL'
+    }
   }
 };
 
 // ==========================================
-// MOTEUR PRINCIPAL DU JEU SKYCHORD
+// 3. MOTEUR DU JEU SKYCHORD COMBAT CÉLESTE
 // ==========================================
 class SkyChordGame {
   constructor(canvasId) {
@@ -180,40 +327,48 @@ class SkyChordGame {
     this.ctx = this.canvas.getContext('2d');
     this.audio = new SkyChordAudio();
 
-    // Dimensions logiques
+    // Résolution logique
     this.width = 1280;
     this.height = 720;
     this.scale = 1;
 
-    // État du jeu : 'menu', 'cinematic', 'playing', 'gameover'
-    this.state = 'menu';
-    this.mode = 'versus'; // 'histoire', 'eclair', 'titan', 'survie', 'versus'
+    // État : 'menu', 'cinematic', 'playing', 'gameover', 'ultra_cutin'
+    this.state = 'playing';
+    this.mode = 'versus'; // 'versus', 'histoire', 'eclair', 'titan', 'survie'
 
     // Combattants
     this.p1 = null;
     this.p2 = null;
 
-    // Particules & Effets DBZ Kai
+    // Effets visuels Manga & DBZ Kai
     this.particles = [];
     this.hitSparks = [];
     this.speedLines = [];
     this.projectiles = [];
+    this.floatingTexts = [];
+    this.ghostTrails = [];
+
+    // Timers de caméras
     this.shake = 0;
     this.hitStop = 0;
     this.time = 0;
 
-    // Histoire & Cinématiques
+    // Cinématique Ultra & Histoire
+    this.ultraCutin = null;
     this.storyChapter = 1;
     this.cinematicFrame = 0;
     this.cinematicDialogue = '';
     this.cinematicSpeaker = '';
+    this.cinematicTitle = '';
 
     // Entrées
     this.keys = {};
     this.touch = {
       joy: { active: false, startX: 0, startY: 0, currX: 0, currY: 0, dx: 0, dy: 0 },
       attackHold: 0,
-      smashCharged: false
+      smashCharged: false,
+      lastTapDir: 0,
+      lastTapTime: 0
     };
 
     this.initCanvas();
@@ -237,17 +392,48 @@ class SkyChordGame {
   }
 
   bindEvents() {
-    // Clavier
+    // Clavier PC (Touches ZQSD / Flèches + Touches J, K, L, U, I)
     window.addEventListener('keydown', (e) => {
       this.audio.init();
-      this.keys[e.key.toLowerCase()] = true;
-      if (e.key === ' ' && this.state === 'cinematic') this.nextCinematic();
-    });
-    window.addEventListener('keyup', (e) => {
-      this.keys[e.key.toLowerCase()] = false;
+      const k = e.key.toLowerCase();
+      this.keys[k] = true;
+
+      if (e.key === ' ' && this.state === 'cinematic') {
+        this.nextCinematic();
+        return;
+      }
+
+      if (this.state === 'playing' && this.p1) {
+        if (k === 'j') {
+          // Frappe / Charge Smash
+          this.touch.attackHold++;
+        }
+        if (k === 'k') this.p1.special(this);
+        if (k === ' ' || k === 'z' || k === 'arrowup') this.p1.jump();
+        if (k === 'l') this.p1.toggleShield(true);
+        if (k === 'u') this.p1.grabOrUltra(this);
+      }
     });
 
-    // Tactile
+    window.addEventListener('keyup', (e) => {
+      const k = e.key.toLowerCase();
+      this.keys[k] = false;
+
+      if (this.state === 'playing' && this.p1) {
+        if (k === 'j') {
+          if (this.touch.attackHold >= 14) {
+            this.p1.releaseSmash(this);
+          } else {
+            this.p1.normalCombo(this);
+          }
+          this.touch.attackHold = 0;
+          this.touch.smashCharged = false;
+        }
+        if (k === 'l') this.p1.toggleShield(false);
+      }
+    });
+
+    // Tactile mobile
     const c = this.canvas;
     const getPos = (touch) => {
       const r = c.getBoundingClientRect();
@@ -266,8 +452,8 @@ class SkyChordGame {
       }
       for (let t of e.changedTouches) {
         const p = getPos(t);
-        // Joystick gauche
         if (p.x < this.width * 0.45) {
+          // Joystick virtuel gauche
           this.touch.joy.active = true;
           this.touch.joy.id = t.identifier;
           this.touch.joy.startX = p.x;
@@ -275,7 +461,7 @@ class SkyChordGame {
           this.touch.joy.currX = p.x;
           this.touch.joy.currY = p.y;
         } else {
-          // Boutons droits (5 boutons)
+          // Boutons tactiles droits
           this.handleButtonTouch(p, true);
         }
       }
@@ -313,14 +499,63 @@ class SkyChordGame {
     }, { passive: false });
   }
 
-  // Configuration des 5 boutons tactiles
+  // 5 Boutons tactiles ergonomiques adaptés au pouce droit
   getButtons() {
+    const p1 = this.p1;
+    const isUltraReady = p1 && p1.kiGauge >= 100;
+    const p1Data = p1 ? p1.data : FIGHTERS_DATA.sola;
+
     return [
-      { id: 'attack', label: 'FRAPPE', x: 1120, y: 575, r: 72, color: '#f59e0b' },
-      { id: 'special', label: 'SPÉ', x: 980, y: 600, r: 58, color: '#06b6d4' },
-      { id: 'jump', label: 'SAUT', x: 1120, y: 425, r: 60, color: '#10b981' },
-      { id: 'shield', label: 'GARDE', x: 980, y: 450, r: 54, color: '#6366f1' },
-      { id: 'burst', label: 'PRISE', x: 855, y: 530, r: 52, color: '#ec4899' }
+      {
+        id: 'attack',
+        label: 'FRAPPE',
+        sub: 'Combo / Smash',
+        x: 1120,
+        y: 565,
+        r: 68,
+        color: '#f59e0b',
+        glow: 'rgba(245, 158, 11, 0.6)'
+      },
+      {
+        id: 'special',
+        label: 'TIR SPÉ',
+        sub: p1Data.moves.special.slice(0, 14),
+        x: 980,
+        y: 590,
+        r: 56,
+        color: '#06b6d4',
+        glow: 'rgba(6, 182, 212, 0.6)'
+      },
+      {
+        id: 'jump',
+        label: 'SAUT',
+        sub: 'Double Saut',
+        x: 1120,
+        y: 415,
+        r: 58,
+        color: '#10b981',
+        glow: 'rgba(16, 185, 129, 0.6)'
+      },
+      {
+        id: 'shield',
+        label: 'GARDE',
+        sub: 'Parade Parfaite',
+        x: 980,
+        y: 445,
+        r: 52,
+        color: '#8b5cf6',
+        glow: 'rgba(139, 92, 246, 0.6)'
+      },
+      {
+        id: 'burst',
+        label: isUltraReady ? 'ULTRA !' : 'PRISE',
+        sub: isUltraReady ? 'CÉLESTE' : 'Brise-Garde',
+        x: 855,
+        y: 525,
+        r: 50,
+        color: isUltraReady ? '#f43f5e' : '#ec4899',
+        glow: isUltraReady ? 'rgba(244, 63, 94, 0.9)' : 'rgba(236, 72, 153, 0.5)'
+      }
     ];
   }
 
@@ -332,12 +567,12 @@ class SkyChordGame {
           if (isDown) {
             this.touch.attackDown = true;
           } else {
-            // Relâché : si tenu < 10 frames = coup normal ; si tenu >= 10 frames = Smash !
+            // Relâché : si tenu >= 12 frames = Smash chargé puissant, sinon combo rapide
             if (this.p1) {
-              if (this.touch.attackHold >= 10) {
+              if (this.touch.attackHold >= 12) {
                 this.p1.releaseSmash(this);
               } else {
-                this.p1.attack(this);
+                this.p1.normalCombo(this);
               }
             }
             this.touch.attackDown = false;
@@ -349,7 +584,7 @@ class SkyChordGame {
             if (b.id === 'special') this.p1.special(this);
             if (b.id === 'jump') this.p1.jump();
             if (b.id === 'shield') this.p1.toggleShield(true);
-            if (b.id === 'burst') this.p1.grabOrBurst(this);
+            if (b.id === 'burst') this.p1.grabOrUltra(this);
           }
         } else {
           if (this.p1 && b.id === 'shield') this.p1.toggleShield(false);
@@ -359,68 +594,75 @@ class SkyChordGame {
     }
   }
 
-  // Lancement d'un combat
+  // Démarrage d'un match avec combattants choisis
   startMatch(mode = 'versus', p1Id = 'sola', p2Id = 'aether') {
     this.mode = mode;
-    this.p1 = new Fighter(FIGHTERS_DATA[p1Id], 320, 520, 1, false);
-    
-    // Configuration selon le mode
+    const d1 = FIGHTERS_DATA[p1Id] || FIGHTERS_DATA.sola;
+    const d2 = FIGHTERS_DATA[p2Id] || FIGHTERS_DATA.aether;
+
+    this.p1 = new Fighter(d1, 320, 540, 1, false);
+
     if (mode === 'titan') {
-      this.p2 = new Fighter(FIGHTERS_DATA.titan, 960, 520, -1, true);
+      this.p2 = new Fighter(FIGHTERS_DATA.titan, 960, 540, -1, true);
     } else if (mode === 'eclair') {
       this.p1.hp = 1;
       this.p1.damagePercent = 300;
-      this.p2 = new Fighter(FIGHTERS_DATA[p2Id], 960, 520, -1, true);
+      this.p2 = new Fighter(d2, 960, 540, -1, true);
       this.p2.hp = 1;
       this.p2.damagePercent = 300;
     } else if (mode === 'histoire') {
-      this.startStoryChapter(this.storyChapter);
+      this.startStoryChapter(1);
       return;
     } else {
-      this.p2 = new Fighter(FIGHTERS_DATA[p2Id], 960, 520, -1, true);
+      this.p2 = new Fighter(d2, 960, 540, -1, true);
     }
 
     this.particles = [];
     this.hitSparks = [];
     this.speedLines = [];
     this.projectiles = [];
+    this.floatingTexts = [];
+    this.ghostTrails = [];
     this.state = 'playing';
     this.time = 0;
+    this.ultraCutin = null;
   }
 
   startStoryChapter(ch) {
     this.storyChapter = ch;
     this.state = 'cinematic';
     this.cinematicFrame = 0;
+
     if (ch === 1) {
-      this.cinematicSpeaker = 'SOLA (Voix Céleste)';
-      this.cinematicDialogue = '« Le Silence Obscur a brisé le Chœur des Étoiles... Mes flammes solaires doivent s\'éveiller pour le combat décisif ! »';
-      this.cinematicTitle = 'ÉPISODE I : L\'ÉVEIL DES GUERRIERS CÉLESTES';
+      this.cinematicSpeaker = 'SOLA (Guerrière Solaire)';
+      this.cinematicDialogue = '« Le Silence Obscur dévore le Chœur Céleste... Aether, laisse-moi passer pour éveiller l\'harmonie ! »';
+      this.cinematicTitle = 'ÉPISODE I : LE CHOC DES ÉLÉMENTS SACRÉS';
     } else if (ch === 2) {
-      this.cinematicSpeaker = 'AETHER';
-      this.cinematicDialogue = '« Montre-moi la puissance de ton Ki solaire, Sola ! Les cieux ne reconnaissent que la force pure ! »';
-      this.cinematicTitle = 'ÉPISODE II : CHOC DIVIN AU SOMMET DU CIEL';
+      this.cinematicSpeaker = 'NOX (Ombre Astrale)';
+      this.cinematicDialogue = '« Ta lumière ne fait qu\'alimenter les ténèbres. Le vide astral engloutira ton soleil ! »';
+      this.cinematicTitle = 'ÉPISODE II : L\'ÉCLIPSE DU NÉANT';
     } else {
-      this.cinematicSpeaker = 'TITAN KRONOS';
-      this.cinematicDialogue = '« RIEN NE PEUT RÉSISTER À L\'ANÉANTISSEMENT PRIMORDIAL ! TREMBLEZ, MORTELS ! »';
-      this.cinematicTitle = 'ÉPISODE III : LE COMBAT CONTRE LE COLOSSE';
+      this.cinematicSpeaker = 'TITAN KRONOS (Colosse Primordial)';
+      this.cinematicDialogue = '« TREMBLEZ DEVANT LE POIDS DE L\'UNIVERS ! RIEN NE SURVIVRA AU CATACLYSME PRIMORDIAL ! »';
+      this.cinematicTitle = 'ÉPISODE III : L\'ANÉANTISSEMENT DU TITAN';
     }
   }
 
   nextCinematic() {
     this.state = 'playing';
     if (this.storyChapter === 1) {
-      this.p1 = new Fighter(FIGHTERS_DATA.sola, 320, 520, 1, false);
-      this.p2 = new Fighter(FIGHTERS_DATA.aether, 960, 520, -1, true);
+      this.p1 = new Fighter(FIGHTERS_DATA.sola, 320, 540, 1, false);
+      this.p2 = new Fighter(FIGHTERS_DATA.aether, 960, 540, -1, true);
     } else if (this.storyChapter === 2) {
-      this.p1 = new Fighter(FIGHTERS_DATA.sola, 320, 520, 1, false);
-      this.p2 = new Fighter(FIGHTERS_DATA.nox, 960, 520, -1, true);
+      this.p1 = new Fighter(FIGHTERS_DATA.sola, 320, 540, 1, false);
+      this.p2 = new Fighter(FIGHTERS_DATA.nox, 960, 540, -1, true);
     } else {
-      this.p1 = new Fighter(FIGHTERS_DATA.sola, 320, 520, 1, false);
-      this.p2 = new Fighter(FIGHTERS_DATA.titan, 960, 520, -1, true);
+      this.p1 = new Fighter(FIGHTERS_DATA.sola, 320, 540, 1, false);
+      this.p2 = new Fighter(FIGHTERS_DATA.titan, 960, 540, -1, true);
     }
   }
 
+  // Boucle de jeu 60 FPS
   startLoop() {
     const loop = () => {
       this.update();
@@ -433,13 +675,20 @@ class SkyChordGame {
   update() {
     this.time++;
 
-    // Gestion du gel d'impact (Hitstop) DBZ Kai
+    // Hitstop DBZ Kai (freeze frame d'impact)
     if (this.hitStop > 0) {
       this.hitStop--;
       return;
     }
 
     if (this.shake > 0) this.shake *= 0.88;
+
+    // Cut-in cinématique Ultra
+    if (this.ultraCutin) {
+      this.ultraCutin.timer--;
+      if (this.ultraCutin.timer <= 0) this.ultraCutin = null;
+      return;
+    }
 
     if (this.state === 'cinematic') {
       this.cinematicFrame++;
@@ -448,165 +697,129 @@ class SkyChordGame {
 
     if (this.state !== 'playing') return;
 
-    // Mise à jour de la charge de smash tactile
-    if (this.touch.attackDown) {
+    // Charge continue du Smash tactile
+    if (this.touch.attackDown && this.p1 && !this.p1.hitstun) {
       this.touch.attackHold++;
-      this.audio.kiCharge(Math.min(1.0, this.touch.attackHold / 40));
-      if (this.touch.attackHold >= 10 && this.p1) {
-        this.p1.chargeSmash();
-        this.touch.smashCharged = this.p1.smashCharge >= 1.0;
+      this.p1.chargeSmash();
+      if (this.touch.attackHold >= 38) {
+        this.touch.smashCharged = true;
       }
+      this.audio.kiCharge(Math.min(1.0, this.touch.attackHold / 38));
     }
 
-    // Commandes Clavier P1
+    // Contrôles Joueur 1
     if (this.p1) {
-      let mx = 0;
-      if (this.keys['arrowleft'] || this.keys['q'] || this.keys['a']) mx -= 1;
-      if (this.keys['arrowright'] || this.keys['d']) mx += 1;
-      
-      // Combiner clavier et joystick tactile
-      if (this.touch.joy.active) mx = this.touch.joy.dx;
-      this.p1.move(mx);
-
-      if ((this.keys['arrowup'] || this.keys['z'] || this.keys['w']) && this.p1.onGround) {
-        this.p1.jump();
+      // Déplacement Joystick ou Clavier
+      let moveDir = 0;
+      if (this.touch.joy.active && Math.abs(this.touch.joy.dx) > 0.2) {
+        moveDir = Math.sign(this.touch.joy.dx);
+      } else if (this.keys['q'] || this.keys['arrowleft']) {
+        moveDir = -1;
+      } else if (this.keys['d'] || this.keys['arrowright']) {
+        moveDir = 1;
       }
 
-      // Attaque clavier
-      if (this.keys['j']) {
-        if (!this.keys._jHeld) {
-          this.keys._jHeld = true;
-          this.keys._jTime = this.time;
-        } else if (this.time - this.keys._jTime > 8) {
-          this.p1.chargeSmash();
-        }
-      } else if (this.keys._jHeld) {
-        if (this.time - this.keys._jTime > 8) {
-          this.p1.releaseSmash(this);
-        } else {
-          this.p1.attack(this);
-        }
-        this.keys._jHeld = false;
+      this.p1.move(moveDir);
+
+      // Dash tactile au double tap horizontal
+      if (this.touch.joy.active && Math.abs(this.touch.joy.dx) > 0.85) {
+        this.p1.dash();
       }
 
-      if (this.keys['k'] && !this.keys._kPressed) {
-        this.keys._kPressed = true;
-        this.p1.special(this);
-      }
-      if (!this.keys['k']) this.keys._kPressed = false;
-
-      if (this.keys['u']) this.p1.toggleShield(true);
-      else if (!this.touch.shieldDown) this.p1.toggleShield(false);
-
-      if (this.keys['i'] && !this.keys._iPressed) {
-        this.keys._iPressed = true;
-        this.p1.grabOrBurst(this);
-      }
-      if (!this.keys['i']) this.keys._iPressed = false;
+      this.p1.update(this);
     }
 
-    // IA P2
-    if (this.p2 && this.p2.isAi) {
-      this.updateAi(this.p2, this.p1);
+    // IA Joueur 2
+    if (this.p2) {
+      this.updateAI(this.p2, this.p1);
+      this.p2.update(this);
     }
 
-    // Physiques combattants
-    if (this.p1) this.p1.update(this);
-    if (this.p2) this.p2.update(this);
-
-    // Collisions combattants
+    // Collisions de combat corps-à-corps
     if (this.p1 && this.p2) {
       this.checkCombatCollisions(this.p1, this.p2);
       this.checkCombatCollisions(this.p2, this.p1);
     }
 
-    // Projectiles
-    for (let i = this.projectiles.length - 1; i >= 0; i--) {
-      const proj = this.projectiles[i];
-      proj.x += proj.vx;
-      proj.life--;
+    // Mise à jour des projectiles & rayons
+    this.updateProjectiles();
 
-      // Collision projectile contre adversaire
-      const target = proj.owner === this.p1 ? this.p2 : this.p1;
-      if (target && Math.hypot(proj.x - target.x, proj.y - (target.y - target.h * 0.5)) < proj.radius + target.w * 0.4) {
-        target.takeDamage(proj.damage, proj.vx * 1.5, -6, this, true);
-        this.addHitSpark(proj.x, proj.y, proj.color, 1.8, true);
-        this.projectiles.splice(i, 1);
-        continue;
-      }
-      if (proj.life <= 0 || proj.x < -100 || proj.x > this.width + 100) {
-        this.projectiles.splice(i, 1);
-      }
+    // Textes flottants (Combos, Dégâts, Parade)
+    for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
+      const ft = this.floatingTexts[i];
+      ft.y -= ft.vy;
+      ft.alpha -= 0.025;
+      if (ft.alpha <= 0) this.floatingTexts.splice(i, 1);
     }
 
     // Particules & Étincelles
-    for (let i = this.particles.length - 1; i >= 0; i--) {
-      const p = this.particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-      p.alpha -= p.decay;
-      if (p.alpha <= 0) this.particles.splice(i, 1);
-    }
-
     for (let i = this.hitSparks.length - 1; i >= 0; i--) {
       const s = this.hitSparks[i];
       s.age++;
       if (s.age > s.maxAge) this.hitSparks.splice(i, 1);
     }
 
-    // Lignes de vitesse manga
-    if (this.p1 && (Math.abs(this.p1.vx) > 6 || this.p1.isSmashing)) {
-      this.addSpeedLine(this.p1.x, this.p1.y - this.p1.h * 0.5, this.p1.vx, this.p1.data.accent);
-    }
-    if (this.p2 && (Math.abs(this.p2.vx) > 6 || this.p2.isSmashing)) {
-      this.addSpeedLine(this.p2.x, this.p2.y - this.p2.h * 0.5, this.p2.vx, this.p2.data.accent);
+    for (let i = this.ghostTrails.length - 1; i >= 0; i--) {
+      const gt = this.ghostTrails[i];
+      gt.alpha -= 0.06;
+      if (gt.alpha <= 0) this.ghostTrails.splice(i, 1);
     }
 
-    for (let i = this.speedLines.length - 1; i >= 0; i--) {
-      const l = this.speedLines[i];
-      l.x += l.vx;
-      l.alpha -= 0.08;
-      if (l.alpha <= 0) this.speedLines.splice(i, 1);
-    }
-
-    // Victoire / Défaite
+    // Conditions de fin de match
     if (this.p1 && this.p1.hp <= 0) this.triggerGameOver(this.p2);
-    if (this.p2 && this.p2.hp <= 0) this.triggerGameOver(this.p1);
+    if (this.p2 && this.p2.hp <= 0) {
+      if (this.mode === 'histoire' && this.storyChapter < 3) {
+        this.startStoryChapter(this.storyChapter + 1);
+      } else {
+        this.triggerGameOver(this.p1);
+      }
+    }
   }
 
-  updateAi(ai, target) {
-    if (!target) return;
-    const dist = target.x - ai.x;
-    const absDist = Math.abs(dist);
+  // IA dynamique et agressive
+  updateAI(ai, target) {
+    if (!ai || !target || ai.hitstun > 0) return;
+    const dx = target.x - ai.x;
+    const absDist = Math.abs(dx);
+    ai.facing = Math.sign(dx) || 1;
 
-    // Direction
-    if (absDist > 110) {
-      ai.move(Math.sign(dist) * (ai.isTitan ? 0.7 : 0.85));
+    // Déplacement vers la cible
+    if (absDist > 160) {
+      ai.move(ai.facing);
+      if (Math.random() < 0.02) ai.dash();
+    } else if (absDist < 60 && Math.random() < 0.03) {
+      ai.move(-ai.facing);
     } else {
       ai.move(0);
     }
 
-    // Saut pour esquive ou poursuite
-    if (Math.random() < 0.02 && ai.onGround) {
+    // Saut si la cible est en l'air
+    if (target.y < ai.y - 60 && Math.random() < 0.04) {
       ai.jump();
     }
 
-    // Attaques & Coups spéciaux
-    if (absDist < 140 && Math.random() < 0.06) {
-      if (Math.random() < 0.25) {
-        ai.special(this);
-      } else {
-        ai.attack(this);
+    // Attaques variées de l'IA
+    if (absDist < 140) {
+      if (Math.random() < 0.06) {
+        ai.normalCombo(this);
+      } else if (Math.random() < 0.015) {
+        ai.chargeSmash();
+        setTimeout(() => ai.releaseSmash(this), 300);
+      } else if (Math.random() < 0.02) {
+        ai.grabOrUltra(this);
       }
+    } else if (absDist > 250 && Math.random() < 0.025) {
+      ai.special(this);
     }
 
-    // Garde occasionnelle
-    if (target.isAttacking && absDist < 120 && Math.random() < 0.05) {
+    // Parade occasionnelle
+    if (target.isAttacking && absDist < 120 && Math.random() < 0.06) {
       ai.toggleShield(true);
-      setTimeout(() => ai.toggleShield(false), 350);
+      setTimeout(() => ai.toggleShield(false), 380);
     }
   }
 
+  // Gestion des collisions d'attaques
   checkCombatCollisions(attacker, victim) {
     if (!attacker.isAttacking || attacker.hitHasConnected) return;
 
@@ -619,31 +832,131 @@ class SkyChordGame {
       hitbox.y < hurtbox.y + hurtbox.h &&
       hitbox.y + hitbox.h > hurtbox.y
     ) {
+      // Vérification de Parade Parfaite (Just-Guard)
+      if (victim.isShielding && victim.shieldTimer < 10) {
+        attacker.hitHasConnected = true;
+        attacker.hitstun = 30; // Contre garanti !
+        victim.toggleShield(false);
+        this.audio.shield(true);
+        this.shake = 10;
+        this.hitStop = 8;
+        this.addFloatingText(victim.x, victim.y - victim.h, 'PARADE PARFAITE !', '#38bdf8', 1.8);
+        this.addHitSpark(hitbox.x + hitbox.w * 0.5, hitbox.y + hitbox.h * 0.5, '#38bdf8', 2.5, true);
+        return;
+      }
+
       attacker.hitHasConnected = true;
       const isCrit = attacker.isSmashing;
-      const damage = isCrit ? 38 : (attacker.isTitan ? 28 : 16);
-      const knockbackX = attacker.facing * (isCrit ? 22 : 9);
-      const knockbackY = isCrit ? -14 : -7;
+      const comboStep = attacker.comboStep;
 
-      victim.takeDamage(damage, knockbackX, knockbackY, this, isCrit);
-      this.addHitSpark(hitbox.x + hitbox.w * 0.5, hitbox.y + hitbox.h * 0.5, attacker.data.accent, isCrit ? 2.2 : 1.2, isCrit);
-      this.audio.punch(isCrit);
+      // Calcul des dégâts et de la poussée selon le type de coup
+      let damage = 14;
+      let knockX = attacker.facing * 8;
+      let knockY = -6;
 
-      // Hitstop & secousse d'écran DBZ Kai
-      this.hitStop = isCrit ? 7 : 3;
-      this.shake = isCrit ? 16 : 6;
+      if (isCrit) {
+        damage = attacker.isTitan ? 52 : 40;
+        knockX = attacker.facing * (attacker.isTitan ? 28 : 22);
+        knockY = -15;
+      } else if (comboStep === 2) {
+        // Dernier coup du combo (Finisher)
+        damage = 22;
+        knockX = attacker.facing * 16;
+        knockY = -12;
+      } else if (comboStep === 1) {
+        damage = 16;
+        knockX = attacker.facing * 9;
+        knockY = -4;
+      }
+
+      victim.takeDamage(damage, knockX, knockY, this, isCrit);
+      attacker.kiGauge = Math.min(100, attacker.kiGauge + (isCrit ? 22 : 12));
+
+      // Bruitages et étincelles
+      this.audio.punch(attacker.data.soundType, isCrit || comboStep === 2);
+      this.addHitSpark(hitbox.x + hitbox.w * 0.5, hitbox.y + hitbox.h * 0.5, attacker.data.accent, isCrit ? 2.4 : 1.3, isCrit);
+
+      // Hitstop & secousse d'écran manga
+      this.hitStop = isCrit ? 8 : (comboStep === 2 ? 5 : 2);
+      this.shake = isCrit ? 18 : (comboStep === 2 ? 10 : 4);
+
+      // Affichage du combo
+      attacker.comboHits++;
+      if (attacker.comboHits > 1) {
+        this.addFloatingText(attacker.x, attacker.y - attacker.h - 20, `${attacker.comboHits} HITS !`, attacker.data.accent, 1.4);
+      }
+    }
+  }
+
+  // Projectiles spécifiques avec trajectoires uniques
+  updateProjectiles() {
+    for (let i = this.projectiles.length - 1; i >= 0; i--) {
+      const p = this.projectiles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.life--;
+
+      // Gravité pour le météore de Titan
+      if (p.hasGravity) p.vy += 0.45;
+
+      // Attraction gravitationnelle de la singularité de Nox
+      if (p.isSingularity) {
+        const opp = (p.owner === this.p1) ? this.p2 : this.p1;
+        if (opp) {
+          const dist = Math.hypot(p.x - opp.x, p.y - (opp.y - opp.h * 0.5));
+          if (dist < 260 && !opp.isShielding) {
+            opp.x += Math.sign(p.x - opp.x) * 3.5;
+          }
+        }
+      }
+
+      // Traînée de particules
+      if (this.time % 2 === 0) {
+        this.hitSparks.push({
+          x: p.x,
+          y: p.y,
+          color: p.color,
+          scale: 0.6,
+          isCrit: false,
+          age: 0,
+          maxAge: 8
+        });
+      }
+
+      // Collision avec l'adversaire
+      const target = (p.owner === this.p1) ? this.p2 : this.p1;
+      if (target) {
+        const hurt = target.getHurtbox();
+        if (
+          p.x > hurt.x && p.x < hurt.x + hurt.w &&
+          p.y > hurt.y && p.y < hurt.y + hurt.h
+        ) {
+          target.takeDamage(p.damage, Math.sign(p.vx) * 14, -8, this, true);
+          this.addHitSpark(p.x, p.y, p.color, 2.0, true);
+          this.audio.punch(p.owner.data.soundType, true);
+          this.shake = 8;
+          this.hitStop = 4;
+          this.projectiles.splice(i, 1);
+          continue;
+        }
+      }
+
+      if (p.life <= 0 || p.x < 50 || p.x > this.width - 50 || p.y > 600) {
+        this.addHitSpark(p.x, p.y, p.color, 1.4, false);
+        this.projectiles.splice(i, 1);
+      }
     }
   }
 
   addHitSpark(x, y, color, scale = 1, isCrit = false) {
     this.hitSparks.push({
-      x, y, color, scale, isCrit, age: 0, maxAge: isCrit ? 16 : 10
+      x, y, color, scale, isCrit, age: 0, maxAge: isCrit ? 16 : 9
     });
   }
 
-  addSpeedLine(x, y, vx, color) {
-    this.speedLines.push({
-      x, y, vx: -vx * 1.6, len: Math.abs(vx) * 12 + 40, color, alpha: 0.8
+  addFloatingText(x, y, text, color, scale = 1.0) {
+    this.floatingTexts.push({
+      x, y, text, color, scale, vy: 1.8, alpha: 1.0
     });
   }
 
@@ -653,97 +966,107 @@ class SkyChordGame {
   }
 
   // ==========================================
-  // RENDU GRAPHIQUE DRAGON BALL Z KAI
+  // 4. RENDU GRAPHIQUE MANGA & ANIME DBZ KAI
   // ==========================================
   render() {
     const c = this.ctx;
     c.save();
 
-    // Secousse d'écran (Screen Shake)
+    // Secousse dynamique d'écran
     if (this.shake > 0) {
       const sx = (Math.random() * 2 - 1) * this.shake;
       const sy = (Math.random() * 2 - 1) * this.shake;
       c.translate(sx, sy);
     }
 
-    // 1. Fond Arène Céleste DBZ Kai
+    // 1. Décor Céleste & Ruines flottantes
     this.renderArena(c);
 
-    // 2. Lignes de vitesse manga en arrière-plan
-    this.renderSpeedLines(c);
+    // 2. Traînées de dédoublement (Ghost Shadows)
+    this.renderGhostTrails(c);
 
-    // 3. Projectiles & Rayons Ki
+    // 3. Projectiles Célestes
     this.renderProjectiles(c);
 
-    // 4. Combattants Cel-Shadés avec Auras de Ki
+    // 4. Les Combattants Cel-Shadés
     if (this.p1) this.p1.render(c, this.time);
     if (this.p2) this.p2.render(c, this.time);
 
-    // 5. Étincelles & Étoiles de choc DBZ Kai
+    // 5. Étincelles & Étoiles de Choc
     this.renderHitSparks(c);
 
-    // 6. HUD de combat (Barres de PV, portrait, jauge de Ki, timers)
+    // 6. Textes Flottants (Dégâts, Combos)
+    this.renderFloatingTexts(c);
+
+    // 7. HUD de Combat Céleste
     this.renderHUD(c);
 
-    // 7. Commandes tactiles mobiles (5 boutons élégants)
+    // 8. Commandes Tactiles Mobiles 5 Touches
     this.renderTouchControls(c);
 
-    // 8. Écrans spécifiques (Cinématique, Menus, GameOver)
+    // 9. Cut-in Anime Ultra & Écrans
+    if (this.ultraCutin) this.renderUltraCutin(c);
     if (this.state === 'cinematic') this.renderCinematic(c);
     if (this.state === 'gameover') this.renderGameOver(c);
-    if (this.state === 'menu') this.renderMenu(c);
 
     c.restore();
   }
 
   renderArena(c) {
-    // Dégradé céleste cosmique
+    // Ciel Cosmique Nébulaire
     const grad = c.createLinearGradient(0, 0, 0, this.height);
-    grad.addColorStop(0, '#0a0a1a');
-    grad.addColorStop(0.65, '#1e1b4b');
-    grad.addColorStop(1, '#311042');
+    grad.addColorStop(0, '#060411');
+    grad.addColorStop(0.5, '#161233');
+    grad.addColorStop(1, '#2c103a');
     c.fillStyle = grad;
     c.fillRect(0, 0, this.width, this.height);
 
-    // Étoiles et nébuleuses
-    c.fillStyle = 'rgba(255, 255, 255, 0.6)';
-    for (let i = 0; i < 40; i++) {
-      const ex = (i * 97 + this.time * 0.1) % this.width;
-      const ey = (i * 137) % (this.height * 0.7);
-      const r = (i % 3) + 1;
+    // Constellations en arrière-plan
+    c.fillStyle = 'rgba(255, 255, 255, 0.75)';
+    for (let i = 0; i < 45; i++) {
+      const sx = (i * 103 + this.time * 0.15) % this.width;
+      const sy = (i * 149) % (this.height * 0.72);
+      const r = (i % 3 === 0) ? 2.2 : 1.2;
       c.beginPath();
-      c.arc(ex, ey, r, 0, Math.PI * 2);
+      c.arc(sx, sy, r, 0, Math.PI * 2);
       c.fill();
     }
 
-    // Plateforme céleste centrale (temple doré en ruine flottant)
+    // Plateforme Céleste Sacrée
     const platY = 560;
-    c.fillStyle = '#1e1b2e';
+    c.save();
+    c.fillStyle = '#171426';
     c.strokeStyle = '#f59e0b';
     c.lineWidth = 4;
     c.beginPath();
-    c.roundRect(160, platY, 960, 140, [12, 12, 0, 0]);
+    c.roundRect(140, platY, 1000, 160, [14, 14, 0, 0]);
     c.fill();
     c.stroke();
 
-    // Motifs d'or céleste cel-shadés
-    c.strokeStyle = 'rgba(245, 158, 11, 0.45)';
-    c.lineWidth = 2;
-    for (let x = 200; x < 1080; x += 80) {
-      c.strokeRect(x, platY + 15, 60, 40);
+    // Frise gravée d'or et runes
+    c.strokeStyle = 'rgba(251, 191, 36, 0.45)';
+    c.lineWidth = 2.5;
+    for (let x = 180; x < 1100; x += 75) {
+      c.strokeRect(x, platY + 14, 55, 35);
+      c.beginPath();
+      c.moveTo(x + 27, platY + 14);
+      c.lineTo(x + 27, platY + 49);
+      c.stroke();
     }
+    c.restore();
   }
 
-  renderSpeedLines(c) {
-    for (let l of this.speedLines) {
+  renderGhostTrails(c) {
+    for (let gt of this.ghostTrails) {
       c.save();
-      c.strokeStyle = l.color;
-      c.lineWidth = 3;
-      c.globalAlpha = Math.max(0, l.alpha);
+      c.translate(gt.x, gt.y);
+      c.scale(gt.facing, 1);
+      c.globalAlpha = Math.max(0, gt.alpha * 0.45);
+      c.fillStyle = gt.color;
+      // Silhouette de course
       c.beginPath();
-      c.moveTo(l.x, l.y);
-      c.lineTo(l.x + l.len, l.y);
-      c.stroke();
+      c.roundRect(-gt.w * 0.5, -gt.h, gt.w, gt.h, 6);
+      c.fill();
       c.restore();
     }
   }
@@ -751,23 +1074,49 @@ class SkyChordGame {
   renderProjectiles(c) {
     for (let p of this.projectiles) {
       c.save();
-      // Rayon d'énergie Kamehameha / Beam
-      const grad = c.createRadialGradient(p.x, p.y, 4, p.x, p.y, p.radius * 2);
-      grad.addColorStop(0, '#ffffff');
-      grad.addColorStop(0.4, p.color);
-      grad.addColorStop(1, 'transparent');
-      c.fillStyle = grad;
-      c.beginPath();
-      c.arc(p.x, p.y, p.radius * 2, 0, Math.PI * 2);
-      c.fill();
+      c.translate(p.x, p.y);
 
-      // Traînée de foudre
-      c.strokeStyle = '#ffffff';
-      c.lineWidth = 4;
-      c.beginPath();
-      c.moveTo(p.x, p.y);
-      c.lineTo(p.x - p.vx * 3, p.y);
-      c.stroke();
+      if (p.isBeam) {
+        // Rayon laser continu façon Kamehameha
+        const beamW = 140;
+        const beamH = p.radius * 2;
+        const bGrad = c.createLinearGradient(-beamW * 0.5, 0, beamW * 0.5, 0);
+        bGrad.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+        bGrad.addColorStop(0.5, p.color);
+        bGrad.addColorStop(1, 'transparent');
+        c.fillStyle = bGrad;
+        c.beginPath();
+        c.ellipse(0, 0, beamW, beamH, 0, 0, Math.PI * 2);
+        c.fill();
+      } else if (p.isSingularity) {
+        // Trou noir tourbillonnant
+        c.fillStyle = '#0f051d';
+        c.strokeStyle = p.color;
+        c.lineWidth = 4;
+        c.beginPath();
+        c.arc(0, 0, p.radius, 0, Math.PI * 2);
+        c.fill();
+        c.stroke();
+
+        // Anneau d'accrétion tournoyant
+        c.strokeStyle = '#c084fc';
+        c.lineWidth = 2;
+        c.beginPath();
+        c.ellipse(0, 0, p.radius * 1.6, p.radius * 0.6, this.time * 0.1, 0, Math.PI * 2);
+        c.stroke();
+      } else {
+        // Boule d'énergie / Météore classique
+        c.fillStyle = '#ffffff';
+        c.beginPath();
+        c.arc(0, 0, p.radius * 0.6, 0, Math.PI * 2);
+        c.fill();
+
+        c.strokeStyle = p.color;
+        c.lineWidth = 3.5;
+        c.beginPath();
+        c.arc(0, 0, p.radius, 0, Math.PI * 2);
+        c.stroke();
+      }
       c.restore();
     }
   }
@@ -777,83 +1126,86 @@ class SkyChordGame {
       c.save();
       c.translate(s.x, s.y);
       const pr = s.age / s.maxAge;
-      const alpha = 1.0 - pr;
+      const alpha = 1 - pr;
 
-      // Étoile de choc acérée DBZ Kai à 8 branches
-      const branches = s.isCrit ? 8 : 6;
-      const rExt = (35 + 80 * pr) * s.scale;
-      const rInt = (8 + 15 * pr) * s.scale;
-
+      // Étoile de choc manga à 8 branches
       c.fillStyle = s.color;
-      c.globalAlpha = alpha * 0.85;
+      c.globalAlpha = alpha;
       c.beginPath();
-      for (let i = 0; i < branches * 2; i++) {
-        const ang = (Math.PI / branches) * i + s.age * 0.1;
-        const r = (i % 2 === 0) ? rExt : rInt;
-        const px = Math.cos(ang) * r;
-        const py = Math.sin(ang) * r;
+      const spikes = 8;
+      const rOut = (s.isCrit ? 45 : 24) * (1 + pr * 0.8) * s.scale;
+      const rIn = rOut * 0.25;
+
+      for (let i = 0; i < spikes * 2; i++) {
+        const rad = (Math.PI / spikes) * i;
+        const r = (i % 2 === 0) ? rOut : rIn;
+        const px = Math.cos(rad) * r;
+        const py = Math.sin(rad) * r;
         if (i === 0) c.moveTo(px, py);
         else c.lineTo(px, py);
       }
       c.closePath();
       c.fill();
 
-      // Cœur ardent blanc
+      // Cœur blanc éclatant
       c.fillStyle = '#ffffff';
-      c.globalAlpha = alpha;
       c.beginPath();
-      c.arc(0, 0, rInt * 1.2, 0, Math.PI * 2);
+      c.arc(0, 0, rIn * 1.2, 0, Math.PI * 2);
       c.fill();
-
-      // Double onde de choc sonique
-      c.strokeStyle = '#ffffff';
-      c.lineWidth = (3 * alpha + 1);
-      c.beginPath();
-      c.arc(0, 0, (20 + 90 * pr) * s.scale, 0, Math.PI * 2);
-      c.stroke();
-
       c.restore();
     }
   }
 
+  renderFloatingTexts(c) {
+    for (let ft of this.floatingTexts) {
+      c.save();
+      c.font = `900 ${Math.round(24 * ft.scale)}px "Outfit", sans-serif`;
+      c.textAlign = 'center';
+      c.fillStyle = ft.color;
+      c.globalAlpha = ft.alpha;
+      c.strokeStyle = '#000000';
+      c.lineWidth = 4;
+      c.strokeText(ft.text, ft.x, ft.y);
+      c.fillText(ft.text, ft.x, ft.y);
+      c.restore();
+    }
+  }
+
+  // HUD de combat avec barres de PV, jauge de Ki et icônes
   renderHUD(c) {
     if (!this.p1 || !this.p2) return;
 
-    // Cartouche Joueur 1 (Gauche)
-    this.renderFighterCard(c, this.p1, 60, 40, false);
+    this.renderFighterCard(c, this.p1, 60, 35, false);
+    this.renderFighterCard(c, this.p2, this.width - 440, 35, true);
 
-    // Cartouche Joueur 2 / Boss (Droite)
-    this.renderFighterCard(c, this.p2, this.width - 440, 40, true);
-
-    // Titre central du mode
+    // Titre du mode
     c.save();
-    c.font = 'bold 22px "Cinzel", "Outfit", sans-serif';
+    c.font = 'bold 20px "Cinzel", serif';
     c.textAlign = 'center';
     c.fillStyle = '#fbbf24';
     c.shadowColor = 'rgba(251, 191, 36, 0.8)';
-    c.shadowBlur = 10;
-    const modeLabels = {
+    c.shadowBlur = 12;
+    const modeNames = {
+      versus: 'DUEL VERSUS CÉLESTE',
       histoire: 'MODE HISTOIRE — CHANT DES ORIGINES',
-      eclair: '⚡ MORT SUBITE — 300% DÉGÂTS ⚡',
-      titan: '☠ DÉFI TITAN COLOSSE ☠',
-      survie: 'SURVIE VAGUES CÉLESTES',
-      versus: 'DUEL VERSUS CÉLESTE'
+      eclair: '⚡ MORT SUBITE (300% DÉGÂTS) ⚡',
+      titan: '☠ DÉFI DU TITAN KRONOS ☠'
     };
-    c.fillText(modeLabels[this.mode] || 'SKYCHORD COMBAT', this.width / 2, 45);
+    c.fillText(modeNames[this.mode] || 'SKYCHORD COMBAT', this.width / 2, 42);
     c.restore();
   }
 
   renderFighterCard(c, f, x, y, isRight) {
     c.save();
     const w = 380;
-    const h = 55;
+    const h = 65;
 
-    // Fond verre sombre et cadre d'or
-    c.fillStyle = 'rgba(15, 10, 30, 0.85)';
+    // Panneau de verre sombre
+    c.fillStyle = 'rgba(12, 8, 26, 0.88)';
     c.strokeStyle = f.data.accent;
     c.lineWidth = 3;
     c.beginPath();
-    c.roundRect(x, y, w, h, 8);
+    c.roundRect(x, y, w, h, 10);
     c.fill();
     c.stroke();
 
@@ -865,16 +1217,23 @@ class SkyChordGame {
     hpGrad.addColorStop(1, '#10b981');
     c.fillStyle = hpGrad;
     c.beginPath();
-    c.roundRect(x + 6, y + 24, (w - 12) * hpRatio, 24, 4);
+    c.roundRect(x + 8, y + 26, (w - 16) * hpRatio, 20, 4);
     c.fill();
 
-    // Nom et Pourcentage façon Smash / DBZ Kai
-    c.font = 'bold 18px "Outfit", sans-serif';
+    // Jauge de Ki / Harmonie (Ultra)
+    const kiRatio = Math.max(0, f.kiGauge / 100);
+    c.fillStyle = f.kiGauge >= 100 ? '#f43f5e' : '#38bdf8';
+    c.beginPath();
+    c.roundRect(x + 8, y + 50, (w - 16) * kiRatio, 6, 2);
+    c.fill();
+
+    // Nom et Pourcentage façon Smash
+    c.font = '900 17px "Outfit", sans-serif';
     c.fillStyle = '#ffffff';
     c.textAlign = isRight ? 'right' : 'left';
-    c.fillText(f.data.name, isRight ? x + w - 12 : x + 12, y + 18);
+    c.fillText(f.data.name, isRight ? x + w - 12 : x + 12, y + 20);
 
-    c.font = '900 20px "JetBrains Mono", sans-serif';
+    c.font = '900 18px "JetBrains Mono", sans-serif';
     c.fillStyle = f.hp < f.data.maxHp * 0.3 ? '#ef4444' : '#fde047';
     c.textAlign = isRight ? 'left' : 'right';
     c.fillText(`${Math.round(f.damagePercent)}%`, isRight ? x + 12 : x + w - 12, y + 42);
@@ -882,18 +1241,18 @@ class SkyChordGame {
     c.restore();
   }
 
+  // Commandes tactiles mobiles adaptées à 5 touches
   renderTouchControls(c) {
-    // Ne dessine que si du tactile ou mobile est utilisé
     const btns = this.getButtons();
 
     // 1. Joystick gauche
     const jx = this.touch.joy.active ? this.touch.joy.startX : 160;
-    const jy = this.touch.joy.active ? this.touch.joy.startY : 560;
+    const jy = this.touch.joy.active ? this.touch.joy.startY : 550;
     const jr = 65;
 
     c.save();
-    c.fillStyle = 'rgba(15, 12, 35, 0.35)';
-    c.strokeStyle = 'rgba(251, 191, 36, 0.6)';
+    c.fillStyle = 'rgba(15, 12, 35, 0.4)';
+    c.strokeStyle = 'rgba(251, 191, 36, 0.65)';
     c.lineWidth = 3;
     c.beginPath();
     c.arc(jx, jy, jr, 0, Math.PI * 2);
@@ -903,35 +1262,41 @@ class SkyChordGame {
     // Tête du stick
     const knobX = jx + this.touch.joy.dx * jr * 0.7;
     const knobY = jy + this.touch.joy.dy * jr * 0.7;
-    c.fillStyle = 'rgba(251, 191, 36, 0.85)';
+    c.fillStyle = 'rgba(251, 191, 36, 0.9)';
     c.beginPath();
     c.arc(knobX, knobY, 28, 0, Math.PI * 2);
     c.fill();
     c.restore();
 
-    // 2. 5 Boutons droits ergonomiques
+    // 2. Les 5 boutons droits
     for (let b of btns) {
       c.save();
-      // Effet de verre
-      c.fillStyle = 'rgba(15, 12, 35, 0.45)';
+      c.fillStyle = 'rgba(15, 12, 35, 0.55)';
       c.strokeStyle = b.color;
-      c.lineWidth = 3;
+      c.lineWidth = 3.5;
       c.beginPath();
       c.arc(b.x, b.y, b.r, 0, Math.PI * 2);
       c.fill();
       c.stroke();
 
-      // Texte centré net
-      c.font = `bold ${Math.round(b.r * 0.34)}px "Outfit", sans-serif`;
+      // Texte principal
+      c.font = `900 ${Math.round(b.r * 0.33)}px "Outfit", sans-serif`;
       c.fillStyle = '#ffffff';
       c.textAlign = 'center';
       c.textBaseline = 'middle';
-      c.fillText(b.label, b.x, b.y);
+      c.fillText(b.label, b.x, b.y - (b.sub ? 6 : 0));
 
-      // Anneau dynamique de charge DBZ Kai sur FRAPPE
+      // Sous-titre explicatif
+      if (b.sub) {
+        c.font = `600 ${Math.round(b.r * 0.19)}px "Outfit", sans-serif`;
+        c.fillStyle = b.color;
+        c.fillText(b.sub, b.x, b.y + b.r * 0.32);
+      }
+
+      // Anneau de charge Smash sur FRAPPE
       if (b.id === 'attack' && this.touch.attackHold > 0) {
-        const ratio = Math.min(1.0, this.touch.attackHold / 40);
-        c.strokeStyle = this.touch.smashCharged ? '#22d3ee' : '#fbbf24';
+        const ratio = Math.min(1.0, this.touch.attackHold / 38);
+        c.strokeStyle = this.touch.smashCharged ? '#38bdf8' : '#fbbf24';
         c.lineWidth = 5;
         c.beginPath();
         c.arc(b.x, b.y, b.r + 6, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * ratio);
@@ -939,149 +1304,135 @@ class SkyChordGame {
 
         if (this.touch.smashCharged) {
           c.font = '900 16px "Outfit", sans-serif';
-          c.fillStyle = '#22d3ee';
+          c.fillStyle = '#38bdf8';
           c.fillText('MAX !', b.x, b.y - b.r - 14);
         }
       }
+
       c.restore();
     }
   }
 
-  // Cinématique vidéo de l'Histoire (Letterboxing cinéma + dialogues anime)
+  // Gros plan anime cinématographique lors d'un ULTRA CÉLESTE
+  renderUltraCutin(c) {
+    const u = this.ultraCutin;
+    if (!u) return;
+
+    c.save();
+    // Bande cinématographique traversante
+    c.fillStyle = 'rgba(0, 0, 0, 0.88)';
+    c.fillRect(0, 220, this.width, 280);
+
+    c.strokeStyle = u.fighter.data.accent;
+    c.lineWidth = 5;
+    c.beginPath();
+    c.moveTo(0, 220); c.lineTo(this.width, 220);
+    c.moveTo(0, 500); c.lineTo(this.width, 500);
+    c.stroke();
+
+    // Lignes de vitesse manga traversantes
+    c.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    c.lineWidth = 2;
+    for (let i = 0; i < 20; i++) {
+      const y = 230 + i * 13;
+      c.beginPath();
+      c.moveTo(0, y);
+      c.lineTo(this.width, y);
+      c.stroke();
+    }
+
+    // Nom de l'attaque Ultra en gros caractères manga
+    c.font = '900 48px "Cinzel", "Outfit", serif';
+    c.fillStyle = u.fighter.data.accent;
+    c.textAlign = 'center';
+    c.shadowColor = u.fighter.data.accent;
+    c.shadowBlur = 25;
+    c.fillText(u.fighter.data.moves.ultra, this.width / 2, 340);
+
+    c.font = 'bold 24px "Outfit", sans-serif';
+    c.fillStyle = '#ffffff';
+    c.shadowBlur = 0;
+    c.fillText(`DÉCHAÎNEMENT CÉLESTE DE ${u.fighter.data.name} !`, this.width / 2, 400);
+
+    c.restore();
+  }
+
+  // Cinématiques d'Histoire façon Dragon Ball Z Kai
   renderCinematic(c) {
     c.save();
-    // Bandes noires de cinéma 2.39:1
+    // Letterbox cinéma format 2.39:1
     const barH = 85;
     c.fillStyle = '#000000';
     c.fillRect(0, 0, this.width, barH);
     c.fillRect(0, this.height - barH, this.width, barH);
 
-    // Titre d'épisode façon Dragon Ball Z Kai
-    if (this.cinematicFrame < 180) {
-      c.font = 'bold 32px "Cinzel", serif';
-      c.textAlign = 'center';
-      c.fillStyle = '#fde047';
-      c.shadowColor = 'rgba(253, 224, 71, 0.9)';
-      c.shadowBlur = 18;
-      c.fillText(this.cinematicTitle || '', this.width / 2, 60);
-    }
+    // Titre d'épisode
+    c.font = 'bold 30px "Cinzel", serif';
+    c.textAlign = 'center';
+    c.fillStyle = '#fde047';
+    c.shadowColor = 'rgba(253, 224, 71, 0.9)';
+    c.shadowBlur = 18;
+    c.fillText(this.cinematicTitle || '', this.width / 2, 58);
 
-    // Boîte de dialogue anime en bas
-    c.fillStyle = 'rgba(15, 10, 30, 0.92)';
+    // Boîte de dialogue anime
+    c.fillStyle = 'rgba(15, 10, 30, 0.94)';
     c.strokeStyle = '#f59e0b';
     c.lineWidth = 3;
     c.beginPath();
-    c.roundRect(140, this.height - 210, this.width - 280, 115, 10);
+    c.roundRect(140, this.height - 215, this.width - 280, 115, 12);
     c.fill();
     c.stroke();
 
-    // Nom de l'orateur
+    // Orateur & Texte
     c.font = 'bold 20px "Outfit", sans-serif';
     c.fillStyle = '#38bdf8';
     c.textAlign = 'left';
     c.fillText(this.cinematicSpeaker, 165, this.height - 180);
 
-    // Dialogue
     c.font = '18px "Outfit", sans-serif';
     c.fillStyle = '#ffffff';
     c.fillText(this.cinematicDialogue, 165, this.height - 145);
 
-    // Bouton PASSER / Toucher pour continuer
     c.font = 'bold 15px "Outfit", sans-serif';
     c.fillStyle = '#f59e0b';
     c.textAlign = 'right';
-    c.fillText('Toucher ou Espace pour continuer ▶', this.width - 165, this.height - 110);
+    c.fillText('Toucher ou Espace pour continuer ▶', this.width - 165, this.height - 115);
 
     c.restore();
   }
 
   renderGameOver(c) {
     c.save();
-    c.fillStyle = 'rgba(0, 0, 0, 0.75)';
+    c.fillStyle = 'rgba(0, 0, 0, 0.78)';
     c.fillRect(0, 0, this.width, this.height);
 
     c.font = '900 64px "Cinzel", serif';
     c.textAlign = 'center';
     c.fillStyle = '#fbbf24';
     c.shadowColor = 'rgba(251, 191, 36, 1)';
-    c.shadowBlur = 24;
-    c.fillText('VICTOIRE !', this.width / 2, 300);
+    c.shadowBlur = 25;
+    c.fillText('VICTOIRE !', this.width / 2, 290);
 
     c.font = 'bold 28px "Outfit", sans-serif';
     c.fillStyle = '#ffffff';
     c.shadowBlur = 0;
-    c.fillText(`${this.winner ? this.winner.data.name : 'VAINQUEUR'} TRIOMPHE DU COMBAT !`, this.width / 2, 360);
+    c.fillText(`${this.winner ? this.winner.data.name : 'VAINQUEUR'} TRIOMPHE DU COMBAT !`, this.width / 2, 350);
 
-    // Bouton rejouer
+    // Bouton Rejouer
     c.fillStyle = '#ea580c';
     c.beginPath();
-    c.roundRect(this.width / 2 - 130, 420, 260, 60, 30);
+    c.roundRect(this.width / 2 - 140, 410, 280, 60, 30);
     c.fill();
 
     c.font = 'bold 20px "Outfit", sans-serif';
     c.fillStyle = '#ffffff';
-    c.fillText('REJOUER LE COMBAT', this.width / 2, 458);
-    c.restore();
-  }
-
-  renderMenu(c) {
-    c.save();
-    c.fillStyle = 'rgba(10, 5, 20, 0.9)';
-    c.fillRect(0, 0, this.width, this.height);
-
-    c.font = '900 52px "Cinzel", serif';
-    c.textAlign = 'center';
-    c.fillStyle = '#fbbf24';
-    c.shadowColor = 'rgba(251, 191, 36, 0.9)';
-    c.shadowBlur = 20;
-    c.fillText('SKYCHORD : COMBAT CÉLESTE', this.width / 2, 160);
-
-    c.font = '300 20px "Outfit", sans-serif';
-    c.fillStyle = '#e2e8f0';
-    c.shadowBlur = 0;
-    c.fillText('Refonte Graphique Dragon Ball Z Kai • 5 Commandes Mobiles • Cinématiques', this.width / 2, 210);
-
-    // Sélection des modes de jeu
-    const modes = [
-      { id: 'histoire', title: 'MODE HISTOIRE', desc: 'Cinématiques animées & combats épiques', col: '#f59e0b', x: 260, y: 300 },
-      { id: 'eclair', title: '⚡ MORT SUBITE', desc: '300% de dégâts, tension mortelle', col: '#ef4444', x: 500, y: 300 },
-      { id: 'titan', title: '☠ DÉFI TITAN', desc: 'Raid Boss colossal avec Super Armure', col: '#a855f7', x: 740, y: 300 },
-      { id: 'versus', title: 'DUEL VERSUS', desc: 'Combat classique 1v1 contre l\'IA', col: '#06b6d4', x: 980, y: 300 }
-    ];
-
-    for (let m of modes) {
-      c.fillStyle = 'rgba(20, 15, 40, 0.85)';
-      c.strokeStyle = m.col;
-      c.lineWidth = 3;
-      c.beginPath();
-      c.roundRect(m.x - 100, m.y, 200, 180, 12);
-      c.fill();
-      c.stroke();
-
-      c.font = 'bold 20px "Outfit", sans-serif';
-      c.fillStyle = m.col;
-      c.fillText(m.title, m.x, m.y + 40);
-
-      c.font = '14px "Outfit", sans-serif';
-      c.fillStyle = '#94a3b8';
-      c.fillText(m.desc, m.x, m.y + 80, 170);
-
-      c.fillStyle = m.col;
-      c.beginPath();
-      c.roundRect(m.x - 65, m.y + 120, 130, 38, 19);
-      c.fill();
-
-      c.font = 'bold 15px "Outfit", sans-serif';
-      c.fillStyle = '#ffffff';
-      c.fillText('JOUER', m.x, m.y + 144);
-    }
-
+    c.fillText('REJOUER LE COMBAT', this.width / 2, 448);
     c.restore();
   }
 }
 
 // ==========================================
-// CLASSE FIGHTER (COMBATTANT ANIME KAI)
+// 5. CLASSE FIGHTER (COMBATTANT ANIME ORIGINAL)
 // ==========================================
 class Fighter {
   constructor(data, x, y, facing = 1, isAi = false) {
@@ -1096,33 +1447,54 @@ class Fighter {
     this.scale = data.scale || 1.0;
 
     // Dimensions
-    this.w = 54 * this.scale;
-    this.h = 105 * this.scale;
+    this.w = 56 * this.scale;
+    this.h = 108 * this.scale;
 
     // Stats de combat
     this.hp = data.maxHp;
     this.damagePercent = 0;
+    this.kiGauge = 30; // Jauge d'Harmonie Céleste (0 à 100)
     this.onGround = false;
     this.jumpsLeft = 2;
 
-    // États d'attaque
+    // Système de Combos & Attaques
+    this.comboStep = 0;
+    this.comboTimer = 0;
+    this.comboHits = 0;
     this.isAttacking = false;
     this.attackTimer = 0;
+    this.attackType = 'normal'; // 'normal', 'smash', 'air', 'grab'
+
+    // Charge du Smash
     this.isSmashing = false;
     this.smashCharge = 0;
+
+    // Bouclier & Parade
     this.isShielding = false;
+    this.shieldTimer = 0;
+
+    // États
     this.hitstun = 0;
     this.hitHasConnected = false;
+    this.isDashing = false;
+    this.dashTimer = 0;
   }
 
   move(dir) {
-    if (this.hitstun > 0 || this.isShielding) return;
+    if (this.hitstun > 0 || this.isShielding || this.isSmashing) return;
     this.vx = dir * this.data.speed;
     if (dir !== 0) this.facing = Math.sign(dir);
   }
 
+  dash() {
+    if (this.hitstun > 0 || this.isShielding || this.dashTimer > 0) return;
+    this.isDashing = true;
+    this.dashTimer = 16;
+    this.vx = this.facing * this.data.dashSpeed;
+  }
+
   jump() {
-    if (this.hitstun > 0 || this.isShielding) return;
+    if (this.hitstun > 0 || this.isShielding || this.isSmashing) return;
     if (this.jumpsLeft > 0) {
       this.vy = this.data.jumpPower;
       this.jumpsLeft--;
@@ -1130,89 +1502,197 @@ class Fighter {
     }
   }
 
-  attack(game) {
+  // 1. Combo normal 3 coups (Tap FRAPPE)
+  normalCombo(game) {
     if (this.isAttacking || this.hitstun > 0 || this.isShielding) return;
+
+    if (!this.onGround) {
+      // Attaque aérienne plongeante
+      this.airAttack(game);
+      return;
+    }
+
+    if (this.comboTimer > 0) {
+      this.comboStep = (this.comboStep + 1) % 3;
+    } else {
+      this.comboStep = 0;
+      this.comboHits = 0;
+    }
+
     this.isAttacking = true;
-    this.attackTimer = 16;
-    this.isSmashing = false;
+    this.attackType = 'normal';
+    this.attackTimer = this.comboStep === 2 ? 22 : 14;
+    this.comboTimer = 35;
     this.hitHasConnected = false;
-    game.audio.punch(false);
+
+    // Petite impulsion vers l'avant à chaque coup
+    this.vx = this.facing * (this.comboStep === 2 ? 8 : 4);
+    game.audio.punch(this.data.soundType, false);
   }
 
+  // 2. Attaque aérienne spécifique
+  airAttack(game) {
+    this.isAttacking = true;
+    this.attackType = 'air';
+    this.attackTimer = 18;
+    this.hitHasConnected = false;
+    this.vy = 8; // Plongée
+    this.vx = this.facing * 9;
+    game.audio.punch(this.data.soundType, true);
+  }
+
+  // 3. Charge du Coup Smash
   chargeSmash() {
     if (this.hitstun > 0 || this.isShielding) return;
     this.isAttacking = true;
     this.isSmashing = true;
-    this.smashCharge = Math.min(1.0, this.smashCharge + 0.025);
+    this.attackType = 'smash';
+    this.smashCharge = Math.min(1.0, this.smashCharge + 0.03);
   }
 
+  // 4. Relâchement du Coup Smash Dévastateur
   releaseSmash(game) {
     if (!this.isSmashing) return;
-    this.attackTimer = 24;
-    this.isSmashing = true;
+    this.attackTimer = 26;
+    this.isSmashing = false;
     this.hitHasConnected = false;
-    game.audio.punch(true);
-    // Impulsion vers l'avant lors du Smash
-    this.vx = this.facing * 12;
+
+    // Grande impulsion Smash
+    this.vx = this.facing * (this.isTitan ? 16 : 22);
+    game.audio.punch(this.data.soundType, true);
+    game.addHitSpark(this.x + this.facing * 50, this.y - this.h * 0.5, this.data.accent, 2.2, true);
     this.smashCharge = 0;
   }
 
+  // 5. Tir ou Attaque Spéciale spécifique
   special(game) {
     if (this.isAttacking || this.hitstun > 0 || this.isShielding) return;
     this.isAttacking = true;
-    this.attackTimer = 30;
-    game.audio.kiBeam();
+    this.attackType = 'special';
+    this.attackTimer = 28;
 
-    // Émission du rayon d'énergie Ki
-    game.projectiles.push({
-      x: this.x + this.facing * 40,
-      y: this.y - this.h * 0.55,
-      vx: this.facing * 18,
-      radius: this.isTitan ? 32 : 18,
-      damage: this.isTitan ? 45 : 32,
-      color: this.data.accent,
-      owner: this,
-      life: 65
-    });
+    game.audio.projectileSound(this.data.shotType);
+
+    if (this.data.id === 'sola') {
+      // Rayon Solaire Nova (perçant multi-hit)
+      game.projectiles.push({
+        x: this.x + this.facing * 40,
+        y: this.y - this.h * 0.55,
+        vx: this.facing * 22,
+        vy: 0,
+        radius: 24,
+        damage: 34,
+        color: '#fbbf24',
+        isBeam: true,
+        owner: this,
+        life: 55
+      });
+    } else if (this.data.id === 'aether') {
+      // 3 Lances de foudre Raijin décalées
+      [-3, 0, 3].forEach((vy, idx) => {
+        game.projectiles.push({
+          x: this.x + this.facing * (35 + idx * 10),
+          y: this.y - this.h * 0.55 + vy * 8,
+          vx: this.facing * 24,
+          vy: vy * 0.8,
+          radius: 14,
+          damage: 18,
+          color: '#38bdf8',
+          owner: this,
+          life: 48
+        });
+      });
+    } else if (this.data.id === 'nox') {
+      // Singularité du Néant (trou noir aspirant)
+      game.projectiles.push({
+        x: this.x + this.facing * 45,
+        y: this.y - this.h * 0.55,
+        vx: this.facing * 9,
+        vy: 0,
+        radius: 28,
+        damage: 38,
+        color: '#a855f7',
+        isSingularity: true,
+        owner: this,
+        life: 75
+      });
+    } else {
+      // Météore de Roche Volcanique (Titan)
+      game.projectiles.push({
+        x: this.x + this.facing * 50,
+        y: this.y - this.h * 0.65,
+        vx: this.facing * 12,
+        vy: -7,
+        radius: 36,
+        damage: 48,
+        color: '#ef4444',
+        hasGravity: true,
+        owner: this,
+        life: 70
+      });
+    }
+  }
+
+  // 6. Prise au corps-à-corps OU Ultra Céleste si jauge pleine
+  grabOrUltra(game) {
+    if (this.hitstun > 0) return;
+
+    if (this.kiGauge >= 100) {
+      // DÉCHAÎNEMENT ULTRA CÉLESTE
+      this.kiGauge = 0;
+      this.isAttacking = true;
+      this.attackTimer = 45;
+      game.ultraCutin = { fighter: this, timer: 50 };
+      game.audio.ultraSwarm();
+      game.shake = 22;
+      game.hitStop = 15;
+
+      const opp = (this === game.p1) ? game.p2 : game.p1;
+      if (opp && Math.abs(opp.x - this.x) < 380) {
+        opp.takeDamage(60, this.facing * 26, -16, game, true);
+        game.addHitSpark(opp.x, opp.y - opp.h * 0.5, this.data.accent, 3.2, true);
+      }
+      return;
+    }
+
+    // Prise normale
+    this.isAttacking = true;
+    this.attackType = 'grab';
+    this.attackTimer = 22;
+    const opp = (this === game.p1) ? game.p2 : game.p1;
+
+    if (opp && Math.abs(opp.x - this.x) < 130 && Math.abs(opp.y - this.y) < 60) {
+      opp.takeDamage(24, this.facing * 19, -12, game, true);
+      game.addHitSpark(opp.x, opp.y - opp.h * 0.5, this.data.accent, 2.0, true);
+      game.audio.punch(this.data.soundType, true);
+      this.kiGauge = Math.min(100, this.kiGauge + 20);
+    }
   }
 
   toggleShield(active) {
     if (this.hitstun > 0) return;
     this.isShielding = active;
-  }
-
-  grabOrBurst(game) {
-    if (this.hitstun > 0) return;
-    // Ki Burst d'onde de choc
-    this.isAttacking = true;
-    this.attackTimer = 20;
-    game.audio.shield();
-    game.addHitSpark(this.x, this.y - this.h * 0.5, this.data.accent, 2.0, true);
-    
-    // Repousse l'adversaire
-    const opp = (this === game.p1) ? game.p2 : game.p1;
-    if (opp && Math.abs(opp.x - this.x) < 140) {
-      opp.takeDamage(15, this.facing * 18, -10, game, true);
-    }
+    if (active) this.shieldTimer = 0;
   }
 
   takeDamage(dmg, kbx, kby, game, isCrit = false) {
     if (this.isShielding) {
-      game.audio.shield();
+      game.audio.shield(false);
+      this.hp -= Math.round(dmg * 0.15);
       return;
     }
 
-    // Super armure du Titan colosse
     if (this.isTitan && this.data.superArmor) {
-      kbx *= 0.45;
-      kby *= 0.45;
-      this.hitstun = Math.min(10, this.hitstun);
+      kbx *= 0.4;
+      kby *= 0.4;
+      this.hitstun = Math.min(8, this.hitstun);
     } else {
-      this.hitstun = isCrit ? 24 : 14;
+      this.hitstun = isCrit ? 26 : 14;
     }
 
     this.hp -= dmg;
     this.damagePercent += dmg;
+    this.kiGauge = Math.min(100, this.kiGauge + dmg * 0.4);
     this.vx = kbx;
     this.vy = kby;
     this.isAttacking = false;
@@ -1221,10 +1701,10 @@ class Fighter {
 
   getHitbox() {
     return {
-      x: this.facing > 0 ? this.x : this.x - this.w * 1.5,
-      y: this.y - this.h * 0.8,
-      w: this.w * 1.5,
-      h: this.h * 0.7
+      x: this.facing > 0 ? this.x : this.x - this.w * 1.6,
+      y: this.y - this.h * 0.85,
+      w: this.w * 1.6,
+      h: this.h * 0.75
     };
   }
 
@@ -1244,9 +1724,9 @@ class Fighter {
     this.y += this.vy;
 
     // Ralentissement horizontal
-    this.vx *= 0.85;
+    this.vx *= 0.84;
 
-    // Collision sol (y = 560)
+    // Sol arène
     const groundY = 560;
     if (this.y >= groundY) {
       this.y = groundY;
@@ -1257,10 +1737,11 @@ class Fighter {
       this.onGround = false;
     }
 
-    // Limites arène
-    if (this.x < 120) { this.x = 120; this.vx = 0; }
-    if (this.x > 1160) { this.x = 1160; this.vx = 0; }
+    // Limites de l'arène
+    if (this.x < 140) { this.x = 140; this.vx = 0; }
+    if (this.x > 1140) { this.x = 1140; this.vx = 0; }
 
+    // Timers
     if (this.attackTimer > 0) {
       this.attackTimer--;
       if (this.attackTimer === 0) {
@@ -1269,27 +1750,47 @@ class Fighter {
       }
     }
 
+    if (this.comboTimer > 0) this.comboTimer--;
     if (this.hitstun > 0) this.hitstun--;
+    if (this.isShielding) this.shieldTimer++;
+
+    if (this.dashTimer > 0) {
+      this.dashTimer--;
+      if (this.dashTimer === 0) this.isDashing = false;
+      if (this.dashTimer % 3 === 0) {
+        game.ghostTrails.push({
+          x: this.x,
+          y: this.y,
+          facing: this.facing,
+          w: this.w,
+          h: this.h,
+          color: this.data.accent,
+          alpha: 1.0
+        });
+      }
+    }
   }
 
-  // Rendu Cel-Shadé du combattant et Aura DBZ Kai
+  // ==========================================
+  // 6. DESSIN DU COMBATTANT CEL-SHADÉ DÉTAILLÉ
+  // ==========================================
   render(c, time) {
     c.save();
     c.translate(this.x, this.y);
 
-    // 1. Aura de Ki Flamboyante (Super Saiyan / Kaioken)
-    const isCharging = this.isSmashing || (this.isAttacking && this.attackTimer > 15);
-    const isAwakened = this.hp < this.data.maxHp * 0.3;
+    // 1. Aura de Ki Flamboyante (Super Saiyan / Éveil)
+    const isCharging = this.isSmashing || (this.isAttacking && this.attackTimer > 12);
+    const isAwakened = this.hp < this.data.maxHp * 0.35 || this.kiGauge >= 100;
 
     if (isCharging || isAwakened) {
       this.renderKiAura(c, time, isAwakened);
     }
 
-    // 2. Bouclier énergétique sphérique
+    // 2. Bouclier énergétique sphérique DBZ Kai
     if (this.isShielding) {
       c.save();
-      c.strokeStyle = '#38bdf8';
-      c.fillStyle = 'rgba(56, 189, 248, 0.35)';
+      c.strokeStyle = this.data.accent;
+      c.fillStyle = this.data.auraColor;
       c.lineWidth = 4;
       c.beginPath();
       c.arc(0, -this.h * 0.5, this.h * 0.65, 0, Math.PI * 2);
@@ -1304,7 +1805,7 @@ class Fighter {
     c.ellipse(0, -2, this.w * 0.85, 10, 0, 0, Math.PI * 2);
     c.fill();
 
-    // 4. Dessin du personnage cel-shadé avec trait d'encrage noir épais (2.5 px)
+    // 4. Orientation & Corps détaillé
     c.scale(this.facing, 1);
     this.renderFighterBody(c, time);
 
@@ -1313,98 +1814,199 @@ class Fighter {
 
   renderKiAura(c, time, isAwakened) {
     c.save();
-    const auraCol = isAwakened ? '#ef4444' : this.data.accent;
-    const heightAura = this.h * 1.35;
-    const widthAura = this.w * 1.6;
+    const auraCol = isAwakened ? '#f43f5e' : this.data.accent;
+    const hAura = this.h * 1.35;
+    const wAura = this.w * 1.6;
 
-    // Flammes montantes étirées
+    // Flammes ondulantes montantes
     for (let k = 0; k < 8; k++) {
       const ang = (Math.PI / 4) * k;
-      const flicker = Math.sin(time * 0.3 + k) * 12;
-      const flameH = -heightAura - (k % 2 === 0 ? 30 : 15) - flicker;
+      const flicker = Math.sin(time * 0.35 + k) * 14;
+      const flameH = -hAura - (k % 2 === 0 ? 35 : 18) - flicker;
 
       c.fillStyle = (k % 2 === 0) ? auraCol : 'rgba(255, 255, 255, 0.75)';
       c.globalAlpha = 0.55;
       c.beginPath();
-      c.moveTo(-widthAura * 0.5, 0);
-      c.quadraticCurveTo(Math.cos(ang) * widthAura, flameH * 0.6, 0, flameH);
-      c.quadraticCurveTo(-Math.cos(ang) * widthAura, flameH * 0.6, widthAura * 0.5, 0);
+      c.moveTo(-wAura * 0.5, 0);
+      c.quadraticCurveTo(Math.cos(ang) * wAura, flameH * 0.6, 0, flameH);
+      c.quadraticCurveTo(-Math.cos(ang) * wAura, flameH * 0.6, wAura * 0.5, 0);
       c.fill();
     }
 
-    // Arcs électriques Super Saiyan 2
+    // Arcs électriques SSJ2
     c.strokeStyle = '#e0f2fe';
     c.lineWidth = 2.5;
-    for (let e = 0; e < 3; e++) {
-      const ey = -Math.random() * heightAura;
+    for (let e = 0; e < 4; e++) {
+      const ey = -Math.random() * hAura;
       c.beginPath();
-      c.moveTo(-widthAura * 0.5, ey);
-      c.lineTo(-widthAura * 0.2, ey - 15);
-      c.lineTo(widthAura * 0.2, ey - 5);
-      c.lineTo(widthAura * 0.5, ey - 20);
+      c.moveTo(-wAura * 0.5, ey);
+      c.lineTo(-wAura * 0.2, ey - 15);
+      c.lineTo(wAura * 0.2, ey - 5);
+      c.lineTo(wAura * 0.5, ey - 22);
       c.stroke();
     }
     c.restore();
   }
 
+  // Dessin complet de l'anatomie et de la tenue manga
   renderFighterBody(c, time) {
     const w = this.w;
     const h = this.h;
+    const d = this.data;
 
     c.save();
-    // Contour cel-shading manga noir 3px
     c.strokeStyle = '#050308';
     c.lineWidth = 3.5;
-    c.lineJoin = 'miter';
+    c.lineJoin = 'round';
 
-    // Jambes
-    c.fillStyle = this.data.giColor;
+    // Animation de respiration / bobbing
+    const breath = Math.sin(time * 0.1) * 2;
+
+    // 1. Jambes & Bottes Cel-Shadées
+    c.fillStyle = d.giColor;
     c.beginPath();
-    c.roundRect(-w * 0.45, -h * 0.45, w * 0.38, h * 0.45, 4);
-    c.roundRect(w * 0.05, -h * 0.45, w * 0.38, h * 0.45, 4);
+    // Jambe arrière
+    c.roundRect(-w * 0.42, -h * 0.44 + breath, w * 0.36, h * 0.44, 4);
+    // Jambe avant
+    c.roundRect(w * 0.04, -h * 0.44 + breath, w * 0.36, h * 0.44, 4);
     c.fill();
     c.stroke();
 
-    // Torse / Gi
-    c.fillStyle = this.data.giColor;
+    // Bottes de combat
+    c.fillStyle = d.sashColor;
     c.beginPath();
-    c.roundRect(-w * 0.45, -h * 0.78, w * 0.9, h * 0.38, 6);
+    c.roundRect(-w * 0.44, -h * 0.18 + breath, w * 0.4, h * 0.18, [0, 0, 4, 4]);
+    c.roundRect(w * 0.02, -h * 0.18 + breath, w * 0.4, h * 0.18, [0, 0, 4, 4]);
     c.fill();
     c.stroke();
 
-    // Tête
-    c.fillStyle = '#fde68a'; // Teint chair anime
+    // 2. Torse / Tunique d'arts martiaux
+    c.fillStyle = d.giColor;
     c.beginPath();
-    c.arc(0, -h * 0.88, w * 0.34, 0, Math.PI * 2);
+    c.roundRect(-w * 0.46, -h * 0.78 + breath, w * 0.92, h * 0.36, 6);
     c.fill();
     c.stroke();
 
-    // Cheveux anime flamboyants (Super Saiyan)
-    c.fillStyle = this.data.hairColor;
+    // Ombrage de pli cel-shading du gi
+    c.fillStyle = d.giShadow;
     c.beginPath();
-    c.moveTo(-w * 0.4, -h * 0.9);
-    c.lineTo(-w * 0.7, -h * 1.15);
-    c.lineTo(-w * 0.2, -h * 1.05);
-    c.lineTo(0, -h * 1.3);
-    c.lineTo(w * 0.2, -h * 1.05);
-    c.lineTo(w * 0.7, -h * 1.15);
-    c.lineTo(w * 0.4, -h * 0.9);
+    c.moveTo(-w * 0.46, -h * 0.78 + breath);
+    c.lineTo(-w * 0.2, -h * 0.5 + breath);
+    c.lineTo(-w * 0.46, -h * 0.5 + breath);
+    c.fill();
+
+    // Ceinture / Écharpe flottante (Sash)
+    c.fillStyle = d.sashColor;
+    c.beginPath();
+    c.roundRect(-w * 0.5, -h * 0.46 + breath, w * 1.0, h * 0.09, 3);
+    c.fill();
+    c.stroke();
+
+    // Pans de ceinture flottants avec physique
+    const sashSway = Math.sin(time * 0.2) * 8;
+    c.beginPath();
+    c.moveTo(-w * 0.1, -h * 0.4 + breath);
+    c.quadraticCurveTo(-w * 0.3 + sashSway, -h * 0.2, -w * 0.25 + sashSway, -h * 0.05);
+    c.lineTo(-w * 0.1 + sashSway, -h * 0.05);
+    c.quadraticCurveTo(-w * 0.15 + sashSway, -h * 0.2, 0, -h * 0.4 + breath);
+    c.fill();
+    c.stroke();
+
+    // Écusson / Médaillon Céleste sur le torse
+    c.fillStyle = d.accent;
+    c.beginPath();
+    c.arc(0, -h * 0.65 + breath, w * 0.16, 0, Math.PI * 2);
+    c.fill();
+    c.stroke();
+
+    // 3. Tête & Visage Manga Expressif
+    c.fillStyle = d.skinColor;
+    c.beginPath();
+    // Mâchoire pointue style anime
+    c.moveTo(-w * 0.32, -h * 0.9 + breath);
+    c.lineTo(-w * 0.28, -h * 0.78 + breath);
+    c.lineTo(0, -h * 0.73 + breath);
+    c.lineTo(w * 0.28, -h * 0.78 + breath);
+    c.lineTo(w * 0.32, -h * 0.9 + breath);
     c.closePath();
     c.fill();
     c.stroke();
 
-    // Bras en position de frappe
+    // Yeux Anime expressifs
+    c.fillStyle = '#ffffff';
+    c.beginPath();
+    c.ellipse(w * 0.12, -h * 0.83 + breath, w * 0.11, w * 0.07, 0, 0, Math.PI * 2);
+    c.fill();
+    c.stroke();
+
+    // Iris & Pupille
+    c.fillStyle = d.eyeColor;
+    c.beginPath();
+    c.arc(w * 0.14, -h * 0.83 + breath, w * 0.05, 0, Math.PI * 2);
+    c.fill();
+
+    // Éclat de lumière dans l'œil (Specular Highlight)
+    c.fillStyle = '#ffffff';
+    c.beginPath();
+    c.arc(w * 0.16, -h * 0.84 + breath, 2, 0, Math.PI * 2);
+    c.fill();
+
+    // Sourcil déterminé
+    c.strokeStyle = d.hairShadow;
+    c.lineWidth = 2.5;
+    c.beginPath();
+    c.moveTo(0, -h * 0.88 + breath);
+    c.lineTo(w * 0.24, -h * 0.87 + breath);
+    c.stroke();
+
+    // 4. Chevelure Anime Manga (Super Saiyan / Spiky Hair)
+    c.strokeStyle = '#050308';
+    c.lineWidth = 3.5;
+    c.fillStyle = d.hairColor;
+    c.beginPath();
+    c.moveTo(-w * 0.35, -h * 0.88 + breath);
+    c.lineTo(-w * 0.65, -h * 1.05 + breath);
+    c.lineTo(-w * 0.25, -h * 0.98 + breath);
+    c.lineTo(-w * 0.45, -h * 1.25 + breath);
+    c.lineTo(-w * 0.05, -h * 1.05 + breath);
+    c.lineTo(w * 0.1, -h * 1.35 + breath); // Épi principal sommet
+    c.lineTo(w * 0.25, -h * 1.05 + breath);
+    c.lineTo(w * 0.65, -h * 1.25 + breath);
+    c.lineTo(w * 0.4, -h * 0.95 + breath);
+    c.lineTo(w * 0.65, -h * 0.88 + breath);
+    c.lineTo(w * 0.35, -h * 0.82 + breath);
+    c.closePath();
+    c.fill();
+    c.stroke();
+
+    // Mèches d'ombrage de la chevelure
+    c.fillStyle = d.hairShadow;
+    c.beginPath();
+    c.moveTo(0, -h * 1.05 + breath);
+    c.lineTo(w * 0.1, -h * 1.35 + breath);
+    c.lineTo(w * 0.18, -h * 1.05 + breath);
+    c.fill();
+
+    // 5. Bras & Position d'Attaque
     if (this.isAttacking) {
-      c.fillStyle = this.data.giColor;
+      // Bras projeté vers l'avant
+      c.fillStyle = d.giColor;
       c.beginPath();
-      c.roundRect(w * 0.2, -h * 0.72, w * 0.8, h * 0.2, 4);
+      c.roundRect(w * 0.2, -h * 0.72 + breath, w * 0.85, h * 0.2, 4);
       c.fill();
       c.stroke();
 
-      // Poing étincelant
-      c.fillStyle = this.data.accent;
+      // Poing étincelant avec onde de Ki
+      c.fillStyle = d.accent;
       c.beginPath();
-      c.arc(w * 1.05, -h * 0.62, w * 0.22, 0, Math.PI * 2);
+      c.arc(w * 1.08, -h * 0.62 + breath, w * 0.24, 0, Math.PI * 2);
+      c.fill();
+      c.stroke();
+    } else {
+      // Bras au repos en garde
+      c.fillStyle = d.giColor;
+      c.beginPath();
+      c.roundRect(w * 0.05, -h * 0.72 + breath, w * 0.32, h * 0.38, 4);
       c.fill();
       c.stroke();
     }
