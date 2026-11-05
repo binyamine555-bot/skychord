@@ -1,29 +1,36 @@
 /**
- * SKYCHORD: COMBAT CÉLESTE — MOTEUR DE COMBAT MANGA & ANIME ORIGINAL (QUALITÉ DBZ KAI)
+ * SKYCHORD: COMBAT CÉLESTE — ROSTER OFFICIEL DE 24 COMBATTANTS MANGA ORIGINAUX
  * 
- * - Graphismes Anime Originaux Haute Qualité :
- *   Encrage manga cel-shading noir 3.5px, anatomie et visages expressifs (yeux anime détaillés, mèches de cheveux ombrées),
- *   vêtements dynamiques (ceintures flottantes, armures gravées), auras de Ki flamboyantes, éclairs SSJ2 et étoiles d'impact à 8 branches.
+ * - Qualité Graphique Manga DBZ Kai :
+ *   Encrage cel-shading noir 3.5px, visages anime expressifs (yeux effilés, iris colorés, reflets spéculaires),
+ *   anatomies et coiffures uniques, auras de Ki flamboyantes ascendantes, éclairs SSJ2 et étoiles d'impact à 8 branches.
  * 
- * - Combattants Originaux aux Styles Uniques :
- *   1. SOLA — Guerrière Solaire du Zénith (Combos solaires, Giga Smash incandescent, Rayon Solaire Nova multi-hit, Ultra Solaire).
- *   2. AETHER — Dieu Céleste de la Foudre (Vitesse pure, Raikiri Foudroyant, 3 Lances Raijin téléguidées, Suplex Électrique).
- *   3. NOX — Ombre Astrale du Silence (Lames du vide, Singularité gravitationnelle aspirante, Faux de l'Éclipse).
- *   4. TITAN KRONOS — Colosse Primordial (Super Armure, Écrasement tellurique, Météore de Roche Volcanique, Choc Sismique).
+ * - 24 Combattants Célestes Originaux aux Styles et Movesets Distincts :
+ *   1. SOLA (Zénith Solaire)          13. TERRAX (Astéroïdes & Pierre)
+ *   2. AETHER (Dieu de la Foudre)     14. VESPERA (Aurore Boréale)
+ *   3. NOX (Ombre du Silence)         15. SOLIAN (Paladin Solaire)
+ *   4. TITAN KRONOS (Raid Boss)       16. MORTEX (Faucheur Stellaire)
+ *   5. ZEPHYRA (Vents Célestes)       17. KAIROS (Flux Temporels)
+ *   6. IGNIS (Flammes Astrales)       18. AQUILON (Faucon Céleste)
+ *   7. GLACIA (Reine des Comètes)     19. UMBRA (Crépuscule Furtif)
+ *   8. ORION (Chasseur d'Étoiles)     20. SERAPH (Archange Céleste)
+ *   9. LYRA (Valkyrie du Chœur)       21. VULCAN (Forge Magmatique)
+ *   10. DRAKOS (Dragon Cosmique)      22. CHRONOS ALPHA (Boss Suprême)
+ *   11. NEBULA (Poussière Cosmique)   23. ASTRA (Prêtresse Nébuleuse)
+ *   12. VOLTIS (Moine Foudroyant)     24. KAGE MARU (Shinobi Lunaire)
  * 
- * - Système de Combat Évolué :
- *   • Combo Normal 3 Coups spécifique à chaque personnage (Tap FRAPPE).
- *   • Coup Chargé Smash avec jauge de Ki circulaire, particules aspirées et déflagration spectaculaire (Maintien FRAPPE).
- *   • Tir / Attaque Spéciale propre à chaque combattant avec trajectoire et physique distinctes (Bouton TIR).
- *   • Attaque Aérienne plongeante / tournoyante (Saut + Frappe).
- *   • Prise Spécifique au corps-à-corps et Parade Parfaite (timing précis sur GARDE) avec Contre garanti.
- *   • Jauge d'Harmonie Céleste & Déchaînement ULTRA cinématique avec portrait manga en gros plan.
- * 
- * - Commandes Tactiles Mobiles Fluides à 5 Touches & Support Clavier Complet.
+ * - Système de Gameplay Complet :
+ *   • Combo normal 3 coups unique à chaque combattant (Tap FRAPPE).
+ *   • Coup Smash chargé avec jauge circulaire de Ki et déflagration "MAX !" (Maintien FRAPPE).
+ *   • Tir / Attaque à distance spécifique avec trajectoire et physique propres (Bouton TIR SPÉ).
+ *   • Attaque aérienne plongeante / tournoyante (Saut + Frappe).
+ *   • Prise brise-garde & Parade Parfaite (Just-Guard sur GARDE avec contre garanti).
+ *   • Jauge d'Harmonie Céleste & Déchaînement ULTRA cinématique manga.
+ *   • Commandes tactiles mobiles adaptées à 5 boutons ergonomiques.
  */
 
 // ==========================================
-// 1. MOTEUR AUDIO WEB AUDIO API HARMONIQUE
+// 1. MOTEUR AUDIO HARMONIQUE WEB AUDIO API
 // ==========================================
 class SkyChordAudio {
   constructor() {
@@ -41,7 +48,6 @@ class SkyChordAudio {
     }
   }
 
-  // Bruitage de frappe adapté selon la nature du coup
   punch(type = 'normal', isCrit = false) {
     if (!this.ctx) return;
     const t = this.ctx.currentTime;
@@ -50,19 +56,31 @@ class SkyChordAudio {
 
     if (type === 'electric') {
       osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(450, t);
-      osc.frequency.exponentialRampToValueAtTime(80, t + 0.18);
+      osc.frequency.setValueAtTime(520, t);
+      osc.frequency.exponentialRampToValueAtTime(70, t + 0.18);
     } else if (type === 'void') {
       osc.type = 'sine';
       osc.frequency.setValueAtTime(260, t);
-      osc.frequency.exponentialRampToValueAtTime(40, t + 0.22);
+      osc.frequency.exponentialRampToValueAtTime(35, t + 0.22);
     } else if (type === 'rock') {
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(110, t);
       osc.frequency.exponentialRampToValueAtTime(25, t + 0.28);
+    } else if (type === 'flame') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(320, t);
+      osc.frequency.exponentialRampToValueAtTime(90, t + 0.2);
+    } else if (type === 'crystal') {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(880, t);
+      osc.frequency.exponentialRampToValueAtTime(340, t + 0.16);
+    } else if (type === 'wind') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, t);
+      osc.frequency.exponentialRampToValueAtTime(180, t + 0.15);
     } else {
       osc.type = isCrit ? 'sawtooth' : 'triangle';
-      osc.frequency.setValueAtTime(isCrit ? 160 : 240, t);
+      osc.frequency.setValueAtTime(isCrit ? 170 : 250, t);
       osc.frequency.exponentialRampToValueAtTime(35, t + (isCrit ? 0.24 : 0.12));
     }
 
@@ -73,7 +91,6 @@ class SkyChordAudio {
     osc.start(t);
     osc.stop(t + (isCrit ? 0.26 : 0.14));
 
-    // Déflagration d'impact explosive pour les coups puissants
     if (isCrit) {
       const bSize = Math.floor(this.ctx.sampleRate * 0.2);
       const buffer = this.ctx.createBuffer(1, bSize, this.ctx.sampleRate);
@@ -82,7 +99,7 @@ class SkyChordAudio {
       const noise = this.ctx.createBufferSource();
       noise.buffer = buffer;
       const nGain = this.ctx.createGain();
-      nGain.gain.setValueAtTime(0.6, t);
+      nGain.gain.setValueAtTime(0.65, t);
       nGain.gain.linearRampToValueAtTime(0.01, t + 0.2);
       noise.connect(nGain);
       nGain.connect(this.ctx.destination);
@@ -90,7 +107,6 @@ class SkyChordAudio {
     }
   }
 
-  // Charge d'énergie Ki (fréquence ascendante)
   kiCharge(ratio) {
     if (!this.ctx) return;
     const t = this.ctx.currentTime;
@@ -98,7 +114,7 @@ class SkyChordAudio {
     const gain = this.ctx.createGain();
     osc.type = 'sine';
     osc.frequency.setValueAtTime(160 + ratio * 380, t);
-    gain.gain.setValueAtTime(0.15 * ratio, t);
+    gain.gain.setValueAtTime(0.16 * ratio, t);
     gain.gain.linearRampToValueAtTime(0.01, t + 0.08);
     osc.connect(gain);
     gain.connect(this.ctx.destination);
@@ -106,39 +122,46 @@ class SkyChordAudio {
     osc.stop(t + 0.08);
   }
 
-  // Tirs spécifiques
   projectileSound(type) {
     if (!this.ctx) return;
     const t = this.ctx.currentTime;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
 
-    if (type === 'beam') {
-      // Rayon continu Sola
+    if (type === 'beam' || type === 'holy') {
       osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(550, t);
+      osc.frequency.setValueAtTime(600, t);
       osc.frequency.linearRampToValueAtTime(320, t + 0.35);
       gain.gain.setValueAtTime(0.5, t);
       gain.gain.exponentialRampToValueAtTime(0.01, t + 0.4);
     } else if (type === 'lightning') {
-      // Foudre Aether
       osc.type = 'square';
-      osc.frequency.setValueAtTime(850, t);
-      osc.frequency.exponentialRampToValueAtTime(120, t + 0.25);
+      osc.frequency.setValueAtTime(900, t);
+      osc.frequency.exponentialRampToValueAtTime(140, t + 0.25);
       gain.gain.setValueAtTime(0.45, t);
       gain.gain.exponentialRampToValueAtTime(0.01, t + 0.25);
     } else if (type === 'void') {
-      // Trou noir Nox
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(140, t);
-      osc.frequency.linearRampToValueAtTime(280, t + 0.45);
+      osc.frequency.setValueAtTime(130, t);
+      osc.frequency.linearRampToValueAtTime(290, t + 0.45);
       gain.gain.setValueAtTime(0.5, t);
       gain.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
+    } else if (type === 'crystal') {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(950, t);
+      osc.frequency.exponentialRampToValueAtTime(450, t + 0.2);
+      gain.gain.setValueAtTime(0.5, t);
+      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.25);
+    } else if (type === 'wind' || type === 'arrow') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(750, t);
+      osc.frequency.exponentialRampToValueAtTime(220, t + 0.2);
+      gain.gain.setValueAtTime(0.45, t);
+      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.22);
     } else {
-      // Météore Titan
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(90, t);
-      osc.frequency.exponentialRampToValueAtTime(30, t + 0.5);
+      osc.frequency.exponentialRampToValueAtTime(28, t + 0.5);
       gain.gain.setValueAtTime(0.7, t);
       gain.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
     }
@@ -149,7 +172,6 @@ class SkyChordAudio {
     osc.stop(t + 0.5);
   }
 
-  // Bouclier & Parade Parfaite
   shield(isParry = false) {
     if (!this.ctx) return;
     const t = this.ctx.currentTime;
@@ -158,162 +180,466 @@ class SkyChordAudio {
     osc.type = isParry ? 'triangle' : 'sine';
     osc.frequency.setValueAtTime(isParry ? 1200 : 700, t);
     osc.frequency.exponentialRampToValueAtTime(isParry ? 1800 : 1100, t + 0.2);
-    gain.gain.setValueAtTime(isParry ? 0.7 : 0.35, t);
-    gain.gain.exponentialRampToValueAtTime(0.01, t + (isParry ? 0.3 : 0.18));
+    gain.gain.setValueAtTime(isParry ? 0.75 : 0.35, t);
+    gain.gain.exponentialRampToValueAtTime(0.01, t + (isParry ? 0.32 : 0.18));
     osc.connect(gain);
     gain.connect(this.ctx.destination);
     osc.start(t);
-    osc.stop(t + (isParry ? 0.32 : 0.2));
+    osc.stop(t + (isParry ? 0.35 : 0.2));
   }
 
-  // Son Ultra Céleste
   ultraSwarm() {
     if (!this.ctx) return;
     const t = this.ctx.currentTime;
-    [440, 554, 659, 880].forEach((freq, idx) => {
+    [440, 554, 659, 880, 1108].forEach((freq, idx) => {
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
       osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(freq, t + idx * 0.05);
-      gain.gain.setValueAtTime(0.25, t + idx * 0.05);
-      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.8);
+      osc.frequency.setValueAtTime(freq, t + idx * 0.04);
+      gain.gain.setValueAtTime(0.24, t + idx * 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.85);
       osc.connect(gain);
       gain.connect(this.ctx.destination);
-      osc.start(t + idx * 0.05);
-      osc.stop(t + 0.85);
+      osc.start(t + idx * 0.04);
+      osc.stop(t + 0.9);
     });
   }
 }
 
 // ==========================================
-// 2. DONNÉES DES 4 COMBATTANTS CÉLESTES
+// 2. LE ROSTER COMPLET DES 24 COMBATTANTS
 // ==========================================
 const FIGHTERS_DATA = {
+  // 1. SOLA
   sola: {
     id: 'sola',
     name: 'SOLA',
     title: 'Guerrière Solaire du Zénith',
-    archetype: 'Équilibrée • Pression & Projections Solaires',
-    color: '#f59e0b',
-    accent: '#fbbf24',
-    auraColor: 'rgba(251, 191, 36, 0.9)',
-    hairColor: '#fde047',
-    hairShadow: '#d97706',
-    giColor: '#ea580c',
-    giShadow: '#9a3412',
-    sashColor: '#dc2626',
-    skinColor: '#fde68a',
-    skinShadow: '#fcd34d',
-    eyeColor: '#f59e0b',
-    speed: 7.5,
-    dashSpeed: 17,
-    jumpPower: -16.5,
-    maxHp: 200,
-    shotType: 'beam',
-    soundType: 'normal',
+    archetype: 'Équilibrée • Pression & Supernova',
+    color: '#f59e0b', accent: '#fbbf24', auraColor: 'rgba(251, 191, 36, 0.9)',
+    hairColor: '#fde047', hairShadow: '#d97706', giColor: '#ea580c', giShadow: '#9a3412',
+    sashColor: '#dc2626', skinColor: '#fde68a', skinShadow: '#fcd34d', eyeColor: '#f59e0b',
+    hairType: 'spiky', bodyType: 'standard', speed: 7.5, dashSpeed: 17, jumpPower: -16.5, maxHp: 200,
+    shotType: 'beam', soundType: 'normal',
     moves: {
       combo: ['Jab Solaire', 'Double Coup Zénith', 'Rising Sol Uppercut'],
-      smash: 'GIGA SMASH SOLAIRE (Supernova)',
-      special: 'RAYON SOLAIRE NOVA (Laser perçant)',
-      air: 'Météore Solaire Plongeant',
-      grab: 'Projection Solaire & Déflagration',
-      ultra: 'ÉLIXIR SOLAIRE : ÉVEIL SUPRÊME'
+      smash: 'GIGA SMASH SOLAIRE (Supernova)', special: 'RAYON SOLAIRE NOVA (Laser perçant)',
+      air: 'Météore Solaire Plongeant', grab: 'Projection Solaire & Déflagration',
+      ultra: 'ÉVEIL SUPRÊME : CHANT DU SOLEIL'
     }
   },
+  // 2. AETHER
   aether: {
     id: 'aether',
     name: 'AETHER',
     title: 'Dieu Céleste de la Foudre',
-    archetype: 'Vitesse Éclair • Foudre & Téléportation',
-    color: '#06b6d4',
-    accent: '#38bdf8',
-    auraColor: 'rgba(34, 211, 238, 0.9)',
-    hairColor: '#e0f2fe',
-    hairShadow: '#7dd3fc',
-    giColor: '#0f172a',
-    giShadow: '#020617',
-    sashColor: '#0284c7',
-    skinColor: '#fed7aa',
-    skinShadow: '#fdba74',
-    eyeColor: '#06b6d4',
-    speed: 8.8,
-    dashSpeed: 21,
-    jumpPower: -17.5,
-    maxHp: 185,
-    shotType: 'lightning',
-    soundType: 'electric',
+    archetype: 'Vitesse Éclair • Téléportations & Arcs SSJ2',
+    color: '#06b6d4', accent: '#38bdf8', auraColor: 'rgba(34, 211, 238, 0.9)',
+    hairColor: '#e0f2fe', hairShadow: '#7dd3fc', giColor: '#0f172a', giShadow: '#020617',
+    sashColor: '#0284c7', skinColor: '#fed7aa', skinShadow: '#fdba74', eyeColor: '#06b6d4',
+    hairType: 'swept', bodyType: 'speed', speed: 8.8, dashSpeed: 21, jumpPower: -17.5, maxHp: 185,
+    shotType: 'lightning', soundType: 'electric',
     moves: {
       combo: ['Frappe Tonnerre', 'Coude Foudroyant', 'Volt Kick Électrostatique'],
-      smash: 'RAIKIRI FOUDROYANT (Perce-Éclair)',
-      special: 'LANCES DE FOUDRE RAIJIN (3 carreaux)',
-      air: 'Volt Drill Aérien Électrique',
-      grab: 'Suplex Foudroyant Haute Tension',
+      smash: 'RAIKIRI FOUDROYANT (Perce-Éclair)', special: '3 LANCES DE FOUDRE RAIJIN',
+      air: 'Volt Drill Aérien Tournoyant', grab: 'Suplex Foudroyant Haute Tension',
       ultra: 'JUGEMENT DIVIN DU TEMPLE DE L\'ÉCLAIR'
     }
   },
+  // 3. NOX
   nox: {
     id: 'nox',
     name: 'NOX',
     title: 'Ombre Astrale du Silence',
-    archetype: 'Ruse & Espace • Lames du Vide & Gravité',
-    color: '#8b5cf6',
-    accent: '#c084fc',
-    auraColor: 'rgba(168, 85, 247, 0.9)',
-    hairColor: '#2e1065',
-    hairShadow: '#1e1b4b',
-    giColor: '#1e1b4b',
-    giShadow: '#090514',
-    sashColor: '#7c3aed',
-    skinColor: '#f1f5f9',
-    skinShadow: '#cbd5e1',
-    eyeColor: '#a855f7',
-    speed: 8.0,
-    dashSpeed: 18,
-    jumpPower: -16.0,
-    maxHp: 195,
-    shotType: 'void',
-    soundType: 'void',
+    archetype: 'Ruse & Gravité • Lames du Néant',
+    color: '#8b5cf6', accent: '#c084fc', auraColor: 'rgba(168, 85, 247, 0.9)',
+    hairColor: '#2e1065', hairShadow: '#1e1b4b', giColor: '#1e1b4b', giShadow: '#090514',
+    sashColor: '#7c3aed', skinColor: '#f1f5f9', skinShadow: '#cbd5e1', eyeColor: '#a855f7',
+    hairType: 'cowl', bodyType: 'standard', speed: 8.0, dashSpeed: 18, jumpPower: -16.0, maxHp: 195,
+    shotType: 'void', soundType: 'void',
     moves: {
       combo: ['Lame du Néant', 'Tranchant Spectral', 'Eclipse Spin Nova'],
-      smash: 'FAUX DE L\'ÉCLIPSE (Tranchant du vide)',
-      special: 'SINGULARITÉ DU NÉANT (Attraction & détonation)',
-      air: 'Chute de l\'Ombre Perforante',
-      grab: 'Substitution & Déchirure Astrale',
+      smash: 'FAUX DE L\'ÉCLIPSE (Tranchant du vide)', special: 'SINGULARITÉ DU NÉANT (Attraction)',
+      air: 'Chute de l\'Ombre Perforante', grab: 'Substitution & Déchirure Astrale',
       ultra: 'EFFONDREMENT TOTAL DU TROU NOIR'
     }
   },
+  // 4. KRONOS TITAN
   titan: {
     id: 'titan',
     name: 'TITAN KRONOS',
     title: 'Colosse Primordial des Origines',
     archetype: 'Poids Lourd • Super Armure & Séismes',
-    color: '#dc2626',
-    accent: '#f87171',
-    auraColor: 'rgba(239, 68, 68, 0.95)',
-    hairColor: '#450a0a',
-    hairShadow: '#1c1917',
-    giColor: '#1c1917',
-    giShadow: '#0a0a0a',
-    sashColor: '#991b1b',
-    skinColor: '#78716c',
-    skinShadow: '#44403c',
-    eyeColor: '#ef4444',
-    isTitan: true,
-    scale: 2.15,
-    superArmor: true,
-    speed: 5.0,
-    dashSpeed: 11,
-    jumpPower: -14.2,
-    maxHp: 480,
-    shotType: 'rock',
-    soundType: 'rock',
+    color: '#dc2626', accent: '#f87171', auraColor: 'rgba(239, 68, 68, 0.95)',
+    hairColor: '#450a0a', hairShadow: '#1c1917', giColor: '#1c1917', giShadow: '#0a0a0a',
+    sashColor: '#991b1b', skinColor: '#78716c', skinShadow: '#44403c', eyeColor: '#ef4444',
+    isTitan: true, scale: 2.15, superArmor: true, hairType: 'helmet', bodyType: 'heavy',
+    speed: 5.0, dashSpeed: 11, jumpPower: -14.2, maxHp: 480, shotType: 'rock', soundType: 'rock',
     moves: {
       combo: ['Poing Sismique', 'Revers Magmatique', 'Fracas Colossal au Sol'],
-      smash: 'ÉCRASEMENT TITANESQUE (Double onde de choc)',
-      special: 'MÉTÉORE DE ROCHE VOLCANIQUE',
-      air: 'Séisme Terrestre Colossal',
-      grab: 'Étreinte Broyeuse & Projection',
+      smash: 'ÉCRASEMENT TITANESQUE (Double choc)', special: 'MÉTÉORE DE ROCHE VOLCANIQUE',
+      air: 'Séisme Terrestre Colossal', grab: 'Étreinte Broyeuse & Projection',
       ultra: 'CATACLYSME TELLURIQUE MONDIAL'
+    }
+  },
+  // 5. ZEPHYRA
+  zephyra: {
+    id: 'zephyra',
+    name: 'ZEPHYRA',
+    title: 'Danseuse des Vents Stratosphériques',
+    archetype: 'Vitesse Aérienne • Tornades & Esquives',
+    color: '#10b981', accent: '#34d399', auraColor: 'rgba(52, 211, 153, 0.85)',
+    hairColor: '#a7f3d0', hairShadow: '#059669', giColor: '#064e3b', giShadow: '#022c22',
+    sashColor: '#10b981', skinColor: '#fef3c7', skinShadow: '#fde68a', eyeColor: '#10b981',
+    hairType: 'swept', bodyType: 'speed', speed: 9.0, dashSpeed: 22, jumpPower: -18.0, maxHp: 180,
+    shotType: 'wind', soundType: 'wind',
+    moves: {
+      combo: ['Bise Tranchante', 'Tourbillon Vif', 'Cyclone Ascendant'],
+      smash: 'LAME TYPHON (Rafale supersonique)', special: 'TORNADE D\'ÉMERAUDE',
+      air: 'Spirale Céleste Descendante', grab: 'Projection Cyclonique',
+      ultra: 'OURAGAN DU CHŒUR DES ÉTOILES'
+    }
+  },
+  // 6. IGNIS
+  ignis: {
+    id: 'ignis',
+    name: 'IGNIS',
+    title: 'Maître des Flammes Astrales',
+    archetype: 'Attaque Furieuse • Brûlures & Éruptions',
+    color: '#f97316', accent: '#fb923c', auraColor: 'rgba(251, 146, 60, 0.9)',
+    hairColor: '#ef4444', hairShadow: '#991b1b', giColor: '#7c2d12', giShadow: '#431407',
+    sashColor: '#ea580c', skinColor: '#fed7aa', skinShadow: '#fdba74', eyeColor: '#f97316',
+    hairType: 'spiky', bodyType: 'standard', speed: 7.6, dashSpeed: 17, jumpPower: -16.5, maxHp: 205,
+    shotType: 'flame', soundType: 'flame',
+    moves: {
+      combo: ['Poing Flamboyant', 'Balayage Incandescent', 'Éruption Solaire'],
+      smash: 'IMPACT PYROCLASTIQUE', special: 'BOULE DE BRAISE ASTRALE',
+      air: 'Plongeon du Phénix Ardent', grab: 'Fournaise Corporelle',
+      ultra: 'SUPERNOVA PRIMORDIALE'
+    }
+  },
+  // 7. GLACIA
+  glacia: {
+    id: 'glacia',
+    name: 'GLACIA',
+    title: 'Reine des Comètes Cristallines',
+    archetype: 'Zone & Contrôle • Piques de Givre',
+    color: '#38bdf8', accent: '#7dd3fc', auraColor: 'rgba(125, 211, 252, 0.9)',
+    hairColor: '#f0f9ff', hairShadow: '#38bdf8', giColor: '#0c4a6e', giShadow: '#082f49',
+    sashColor: '#0284c7', skinColor: '#e0f2fe', skinShadow: '#bae6fd', eyeColor: '#0284c7',
+    hairType: 'long', bodyType: 'standard', speed: 7.2, dashSpeed: 16, jumpPower: -16.0, maxHp: 195,
+    shotType: 'crystal', soundType: 'crystal',
+    moves: {
+      combo: ['Stalactite Rapide', 'Gifle de Verre', 'Pointe Zéro Absolu'],
+      smash: 'AVALANCHE STELLAIRE', special: '3 LANCES DE COMÈTE DE GIVRE',
+      air: 'Miroir de Glace Plongeant', grab: 'Enclave de Cristaux',
+      ultra: 'GLACIATION DU COSMOS'
+    }
+  },
+  // 8. ORION
+  orion: {
+    id: 'orion',
+    name: 'ORION',
+    title: 'Chasseur des Constellations',
+    archetype: 'Distance & Précision • Flèches de Lumière',
+    color: '#eab308', accent: '#fde047', auraColor: 'rgba(253, 224, 71, 0.85)',
+    hairColor: '#713f12', hairShadow: '#422006', giColor: '#1e293b', giShadow: '#0f172a',
+    sashColor: '#ca8a04', skinColor: '#fde68a', skinShadow: '#fcd34d', eyeColor: '#eab308',
+    hairType: 'short', bodyType: 'speed', speed: 8.2, dashSpeed: 19, jumpPower: -17.0, maxHp: 190,
+    shotType: 'arrow', soundType: 'arrow',
+    moves: {
+      combo: ['Coup d\'Arc Court', 'Flèche de Pied', 'Tir Perforant Zénith'],
+      smash: 'FLÈCHE ÉTOILÉE DU CENTAURE', special: 'TRAIT DE LUMIÈRE STELLAIRE',
+      air: 'Pluie de Météores Fléchée', grab: 'Entrave Astrale & Tir Point-Blanc',
+      ultra: 'PLUIE COSMIQUE DES CONSTELLATIONS'
+    }
+  },
+  // 9. LYRA
+  lyra: {
+    id: 'lyra',
+    name: 'VALKYRIE LYRA',
+    title: 'Protectrice du Chœur Céleste',
+    archetype: 'Polyvalente • Épée Harmonique & Ailes',
+    color: '#ec4899', accent: '#f472b6', auraColor: 'rgba(244, 114, 182, 0.9)',
+    hairColor: '#fdf2f8', hairShadow: '#f472b6', giColor: '#831843', giShadow: '#500724',
+    sashColor: '#db2777', skinColor: '#fdf2f8', skinShadow: '#fce7f3', eyeColor: '#ec4899',
+    hairType: 'long', bodyType: 'standard', speed: 8.1, dashSpeed: 18, jumpPower: -17.5, maxHp: 200,
+    shotType: 'holy', soundType: 'holy',
+    moves: {
+      combo: ['Entaille d\'Accords', 'Tranchant Lyrique', 'Vole de la Valkyrie'],
+      smash: 'LAME D\'HARMONIE PARFAITE', special: 'CHOC D\'ONDE SONORE SACRÉE',
+      air: 'Descente des Ailes Célestes', grab: 'Arrachage Lyrique',
+      ultra: 'SYMPHONIE DES VALKYRIES CÉLESTES'
+    }
+  },
+  // 10. DRAKOS
+  drakos: {
+    id: 'drakos',
+    name: 'DRAKOS',
+    title: 'Berserker des Étoiles Mortes',
+    archetype: 'Brutalité & Griffes • Plasma Draconique',
+    color: '#991b1b', accent: '#f87171', auraColor: 'rgba(248, 113, 113, 0.95)',
+    hairColor: '#18181b', hairShadow: '#09090b', giColor: '#450a0a', giShadow: '#1c1917',
+    sashColor: '#b91c1c', skinColor: '#a1a1aa', skinShadow: '#71717a', eyeColor: '#dc2626',
+    hairType: 'horns', bodyType: 'heavy', scale: 1.3, speed: 6.8, dashSpeed: 15, jumpPower: -16.0, maxHp: 240,
+    shotType: 'flame', soundType: 'flame',
+    moves: {
+      combo: ['Griffe Draconique', 'Revers de Queue', 'Morsure du Vide'],
+      smash: 'ÉCRASEMENT DU DRAGON NOIR', special: 'SOUFFLE DE PLASMA SOLAIRE',
+      air: 'Plongeon Draconique Féroce', grab: 'Broyeur de Dragon & Projection',
+      ultra: 'COLÈRE DU DRAGON DE L\'APOCALYPSE'
+    }
+  },
+  // 11. NEBULA
+  nebula: {
+    id: 'nebula',
+    name: 'NEBULA',
+    title: 'Sorcière des Poussières Cosmiques',
+    archetype: 'Illusions & Magie • Dédoublements',
+    color: '#a855f7', accent: '#d8b4fe', auraColor: 'rgba(216, 180, 254, 0.9)',
+    hairColor: '#581c87', hairShadow: '#3b0764', giColor: '#3b0764', giShadow: '#1e1b4b',
+    sashColor: '#9333ea', skinColor: '#faf5ff', skinShadow: '#e9d5ff', eyeColor: '#a855f7',
+    hairType: 'long', bodyType: 'speed', speed: 7.9, dashSpeed: 18, jumpPower: -16.8, maxHp: 185,
+    shotType: 'crystal', soundType: 'crystal',
+    moves: {
+      combo: ['Éclat Nébuleux', 'Danse des Poussières', 'Prisme Éthéré'],
+      smash: 'EXPLOSION D\'AMÉTHYSTE ASTRALE', special: 'PLUIE D\'ÉTOILES FILANTES',
+      air: 'Chute de Poussière Cosmique', grab: 'Illusion Miroir & Détonation',
+      ultra: 'VORTEX DE LA NÉBULEUSE PRIMORDIALE'
+    }
+  },
+  // 12. VOLTIS
+  voltis: {
+    id: 'voltis',
+    name: 'VOLTIS',
+    title: 'Moine du Tonnerre Sacré',
+    archetype: 'Arts Martiaux Foudroyants • Enchaînements',
+    color: '#0284c7', accent: '#38bdf8', auraColor: 'rgba(56, 189, 248, 0.9)',
+    hairColor: '#0369a1', hairShadow: '#075985', giColor: '#0c4a6e', giShadow: '#082f49',
+    sashColor: '#38bdf8', skinColor: '#fed7aa', skinShadow: '#fdba74', eyeColor: '#38bdf8',
+    hairType: 'spiky', bodyType: 'standard', speed: 8.4, dashSpeed: 20, jumpPower: -17.2, maxHp: 195,
+    shotType: 'lightning', soundType: 'electric',
+    moves: {
+      combo: ['Paume Électrique', 'Pied Tonnerre', 'Choc de Foudre Sacrée'],
+      smash: 'POING DU DIEU DE LA FOUDRE', special: 'ORBE ÉLECTROSTATIQUE',
+      air: 'Écrasement Électrique Plongeant', grab: 'Prise Volt Haute Puissance',
+      ultra: 'DÉCHAÎNEMENT DES MILLE ÉCLAIRS'
+    }
+  },
+  // 13. TERRAX
+  terrax: {
+    id: 'terrax',
+    name: 'TERRAX',
+    title: 'Gardien des Astéroïdes',
+    archetype: 'Défense Tectonique • Blocs de Pierre',
+    color: '#84cc16', accent: '#a3e635', auraColor: 'rgba(163, 230, 53, 0.85)',
+    hairColor: '#3f6212', hairShadow: '#1a2e05', giColor: '#365314', giShadow: '#14532d',
+    sashColor: '#65a30d', skinColor: '#a1a1aa', skinShadow: '#71717a', eyeColor: '#84cc16',
+    hairType: 'helmet', bodyType: 'heavy', scale: 1.4, superArmor: true,
+    speed: 5.6, dashSpeed: 12, jumpPower: -14.8, maxHp: 260, shotType: 'rock', soundType: 'rock',
+    moves: {
+      combo: ['Coup de Basalte', 'Balayage Rocheux', 'Séisme de Pierre'],
+      smash: 'ÉBOULEMENT ASTRONOMIQUE', special: 'BLOC D\'ASTÉROÏDE CÉLESTE',
+      air: 'Météore de Calcite Plongeant', grab: 'Pétrification & Lancer Lourd',
+      ultra: 'BOUCLIER MONDIAL TECTONIQUE'
+    }
+  },
+  // 14. VESPERA
+  vespera: {
+    id: 'vespera',
+    name: 'VESPERA',
+    title: 'Voleuse des Aurores Boréales',
+    archetype: 'Furtivité & Poignards • Téléportation',
+    color: '#06b6d4', accent: '#22d3ee', auraColor: 'rgba(34, 211, 238, 0.9)',
+    hairColor: '#164e63', hairShadow: '#083344', giColor: '#0e7490', giShadow: '#155e75',
+    sashColor: '#06b6d4', skinColor: '#f0fdfa', skinShadow: '#ccfbf1', eyeColor: '#06b6d4',
+    hairType: 'cowl', bodyType: 'speed', speed: 8.9, dashSpeed: 21, jumpPower: -17.8, maxHp: 180,
+    shotType: 'wind', soundType: 'wind',
+    moves: {
+      combo: ['Dague Boréale', 'Double Estocade', 'Flash du Crépuscule'],
+      smash: 'DANSE DES OMBRES POLAIRES', special: 'DAGUES DE GLACE PRISMATIQUES',
+      air: 'Plongeon du Silence Arctique', grab: 'Disparition & Frappe Nuque',
+      ultra: 'AURORE BORÉALE ANÉANTISSANTE'
+    }
+  },
+  // 15. SOLIAN
+  solian: {
+    id: 'solian',
+    name: 'SOLIAN',
+    title: 'Paladin du Rayon d\'Or',
+    archetype: 'Honneur & Allonge • Hallebarde Solaire',
+    color: '#eab308', accent: '#fef08a', auraColor: 'rgba(254, 240, 138, 0.9)',
+    hairColor: '#ca8a04', hairShadow: '#854d0e', giColor: '#713f12', giShadow: '#422006',
+    sashColor: '#eab308', skinColor: '#fef9c3', skinShadow: '#fef08a', eyeColor: '#eab308',
+    hairType: 'helmet', bodyType: 'standard', speed: 7.4, dashSpeed: 16, jumpPower: -16.2, maxHp: 215,
+    shotType: 'beam', soundType: 'holy',
+    moves: {
+      combo: ['Estoc du Chevalier', 'Taille Dorée', 'Balayage Solaire'],
+      smash: 'POINTE DU SOLEIL LEVANT', special: 'LAME D\'ÉNERGIE RADIATIVE',
+      air: 'Percée Céleste Verticale', grab: 'Jugement du Bouclier d\'Or',
+      ultra: 'CHÂTIMENT DU SOLEIL PRIMORDIAL'
+    }
+  },
+  // 16. MORTEX
+  mortex: {
+    id: 'mortex',
+    name: 'MORTEX',
+    title: 'Faucheur des Supernovas Noires',
+    archetype: 'Faux Céleste • Vampirisme & Âmes',
+    color: '#475569', accent: '#94a3b8', auraColor: 'rgba(148, 163, 184, 0.85)',
+    hairColor: '#0f172a', hairShadow: '#020617', giColor: '#1e293b', giShadow: '#0f172a',
+    sashColor: '#64748b', skinColor: '#e2e8f0', skinShadow: '#cbd5e1', eyeColor: '#ef4444',
+    hairType: 'helmet', bodyType: 'standard', speed: 7.7, dashSpeed: 17, jumpPower: -16.4, maxHp: 210,
+    shotType: 'void', soundType: 'void',
+    moves: {
+      combo: ['Tranchant Spectral', 'Moisson de Givre', 'Faux du Destin'],
+      smash: 'FAUCHE DE L\'ÉTERNITÉ', special: 'CRÂNE D\'ÉNERGIE NOIRE',
+      air: 'Plongeon de la Mort Silencieuse', grab: 'Absorption Vitale & Éjection',
+      ultra: 'CATACLYSME DES SUPERNOVAS NOIRES'
+    }
+  },
+  // 17. KAIROS
+  kairos: {
+    id: 'kairos',
+    name: 'KAIROS',
+    title: 'Maître des Flux Temporels',
+    archetype: 'Distorsion & Timing • Frappes en Différé',
+    color: '#14b8a6', accent: '#2dd4bf', auraColor: 'rgba(45, 212, 191, 0.9)',
+    hairColor: '#0f766e', hairShadow: '#115e59', giColor: '#134e4a', giShadow: '#042f2e',
+    sashColor: '#14b8a6', skinColor: '#ccfbf1', skinShadow: '#99f6e4', eyeColor: '#14b8a6',
+    hairType: 'swept', bodyType: 'speed', speed: 8.3, dashSpeed: 19, jumpPower: -17.0, maxHp: 190,
+    shotType: 'wind', soundType: 'normal',
+    moves: {
+      combo: ['Frappe Chrono', 'Attaque en Écho', 'Rupture Temporelle'],
+      smash: 'IMPACT DU SABLIER COSMIQUE', special: 'ANNEAU DE TEMPS SUSPENDU',
+      air: 'Piquée Temporelle Synchrone', grab: 'Téléportation Passée & Frappe',
+      ultra: 'ARRÊT DU TEMPS DE L\'UNIVERS'
+    }
+  },
+  // 18. AQUILON
+  aquilon: {
+    id: 'aquilon',
+    name: 'AQUILON',
+    title: 'Faucon Céleste du Grand Nord',
+    archetype: 'Domination Aérienne • Plumes d\'Acier',
+    color: '#0284c7', accent: '#38bdf8', auraColor: 'rgba(56, 189, 248, 0.85)',
+    hairColor: '#e0f2fe', hairShadow: '#bae6fd', giColor: '#0369a1', giShadow: '#075985',
+    sashColor: '#0284c7', skinColor: '#fed7aa', skinShadow: '#fdba74', eyeColor: '#0284c7',
+    hairType: 'swept', bodyType: 'speed', speed: 8.7, dashSpeed: 21, jumpPower: -18.2, maxHp: 185,
+    shotType: 'wind', soundType: 'wind',
+    moves: {
+      combo: ['Serre Aérienne', 'Aile Supersonique', 'Piqué de Faucon'],
+      smash: 'PERCÉE DU BEC D\'ACIER', special: 'SALVE DE PLUMES TRANCHANTES',
+      air: 'Piquée Foudroyante du Rapace', grab: 'Enlèvement Céleste & Écrasement',
+      ultra: 'TEMPETE DU FAUCON STRATOSPHÉRIQUE'
+    }
+  },
+  // 19. UMBRA
+  umbra: {
+    id: 'umbra',
+    name: 'UMBRA',
+    title: 'Assassin du Crépuscule',
+    archetype: 'Contre-Attaque Furtive • Dagues Obscures',
+    color: '#6366f1', accent: '#818cf8', auraColor: 'rgba(129, 140, 248, 0.9)',
+    hairColor: '#312e81', hairShadow: '#1e1b4b', giColor: '#1e1b4b', giShadow: '#0f172a',
+    sashColor: '#4f46e5', skinColor: '#e0e7ff', skinShadow: '#c7d2fe', eyeColor: '#6366f1',
+    hairType: 'cowl', bodyType: 'speed', speed: 8.5, dashSpeed: 20, jumpPower: -17.2, maxHp: 190,
+    shotType: 'void', soundType: 'void',
+    moves: {
+      combo: ['Entaille Obscure', 'Poignard de Brume', 'Tornade Crépusculaire'],
+      smash: 'LAME DANS L\'OMBRE', special: 'SHURIKEN DE MATIÈRE NOIRE',
+      air: 'Chute de l\'Ombre Fatale', grab: 'Prise Fantôme & Frappe Arrière',
+      ultra: 'NÉANTISSEMENT DU CRÉPUSCULE TOTAL'
+    }
+  },
+  // 20. SERAPH
+  seraph: {
+    id: 'seraph',
+    name: 'SERAPH',
+    title: 'Archange de la Rédemption',
+    archetype: 'Lumière Prismatique • Piliers Sacrés',
+    color: '#fbbf24', accent: '#fef08a', auraColor: 'rgba(254, 240, 138, 0.95)',
+    hairColor: '#ffffff', hairShadow: '#fef08a', giColor: '#78350f', giShadow: '#451a03',
+    sashColor: '#fbbf24', skinColor: '#fffbeb', skinShadow: '#fef3c7', eyeColor: '#38bdf8',
+    hairType: 'long', bodyType: 'standard', speed: 7.8, dashSpeed: 17, jumpPower: -17.5, maxHp: 210,
+    shotType: 'holy', soundType: 'holy',
+    moves: {
+      combo: ['Glaive de Lumière', 'Éclat Angélique', 'Frappe Séraphique'],
+      smash: 'PILIER DU JUGEMENT SACRÉ', special: 'RAYON DE GRÂCE DIVINE',
+      air: 'Descente des Six Ailes', grab: 'Purification Sacrée & Projection',
+      ultra: 'JUGEMENT SUPRÊME DU SÉRAPHIN'
+    }
+  },
+  // 21. VULCAN
+  vulcan: {
+    id: 'vulcan',
+    name: 'VULCAN',
+    title: 'Forge-Monde Magmatique',
+    archetype: 'Marteau Lourd • Scories & Fusion',
+    color: '#ea580c', accent: '#fb923c', auraColor: 'rgba(251, 146, 60, 0.95)',
+    hairColor: '#7c2d12', hairShadow: '#431407', giColor: '#292524', giShadow: '#1c1917',
+    sashColor: '#ea580c', skinColor: '#d6d3d1', skinShadow: '#a8a29e', eyeColor: '#ea580c',
+    hairType: 'helmet', bodyType: 'heavy', scale: 1.35, superArmor: true,
+    speed: 5.8, dashSpeed: 13, jumpPower: -15.0, maxHp: 250, shotType: 'rock', soundType: 'rock',
+    moves: {
+      combo: ['Coup de Masse', 'Écrasement d\'Enclume', 'Onde de Fusion'],
+      smash: 'MARTEAU DU CŒUR DE LA TERRE', special: 'SCORIE DE FUSION BRÛLANTE',
+      air: 'Chute Lourde de la Forge', grab: 'Prise de Fer Chaud & Projection',
+      ultra: 'ÉRUPTION DE LA FORGE-MONDE'
+    }
+  },
+  // 22. CHRONOS ALPHA
+  chronos: {
+    id: 'chronos',
+    name: 'CHRONOS ALPHA',
+    title: 'Entité Suprême des Origines',
+    archetype: 'Boss Ultime Débloqué • Distorsions Dimensionnelles',
+    color: '#6366f1', accent: '#f43f5e', auraColor: 'rgba(244, 63, 94, 0.95)',
+    hairColor: '#ffffff', hairShadow: '#f43f5e', giColor: '#18181b', giShadow: '#09090b',
+    sashColor: '#6366f1', skinColor: '#f4f4f5', skinShadow: '#e4e4e7', eyeColor: '#f43f5e',
+    hairType: 'horns', bodyType: 'heavy', scale: 1.3, speed: 8.2, dashSpeed: 19, jumpPower: -17.0, maxHp: 320,
+    shotType: 'beam', soundType: 'void',
+    moves: {
+      combo: ['Fissure d\'Éther', 'Choc Cosmique', 'Rupture Spatio-Temporelle'],
+      smash: 'ANÉANTISSEMENT DES DIMENSIONS', special: 'RAYON DE MATIÈRE PRIMORDIALE',
+      air: 'Plongeon de l\'Alpha et l\'Oméga', grab: 'Déchirure de Réalité',
+      ultra: 'GENÈSE & DESTRUCTION DU COSMOS'
+    }
+  },
+  // 23. ASTRA
+  astra: {
+    id: 'astra',
+    name: 'ASTRA',
+    title: 'Prêtresse de la Nébuleuse Nacrée',
+    archetype: 'Magie Stellaire & Protection • Orbes d\'Énergie',
+    color: '#818cf8', accent: '#c7d2fe', auraColor: 'rgba(199, 210, 254, 0.9)',
+    hairColor: '#e0e7ff', hairShadow: '#a5b4fc', giColor: '#312e81', giShadow: '#1e1b4b',
+    sashColor: '#6366f1', skinColor: '#f5f3ff', skinShadow: '#ede9fe', eyeColor: '#818cf8',
+    hairType: 'long', bodyType: 'standard', speed: 7.7, dashSpeed: 17, jumpPower: -16.6, maxHp: 195,
+    shotType: 'holy', soundType: 'holy',
+    moves: {
+      combo: ['Bâton Étoilé', 'Sphère Nacrée', 'Choc Astral'],
+      smash: 'RAYONNEMENT DU CHŒUR STELLAIRE', special: 'ORBE DE NÉBULEUSE GUIDÉE',
+      air: 'Descente du Voile Nacré', grab: 'Purification Stellaire & Répulsion',
+      ultra: 'BÉNÉDICTION DU COSMOS INFINI'
+    }
+  },
+  // 24. KAGE MARU
+  kage: {
+    id: 'kage',
+    name: 'KAGE MARU',
+    title: 'Shinobi Céleste du Rayon Lunaire',
+    archetype: 'Vitesse Extrême • Clones & Shurikens de Lumière',
+    color: '#0f172a', accent: '#38bdf8', auraColor: 'rgba(56, 189, 248, 0.9)',
+    hairColor: '#020617', hairShadow: '#000000', giColor: '#0f172a', giShadow: '#020617',
+    sashColor: '#0284c7', skinColor: '#f8fafc', skinShadow: '#e2e8f0', eyeColor: '#38bdf8',
+    hairType: 'cowl', bodyType: 'speed', speed: 9.2, dashSpeed: 23, jumpPower: -18.5, maxHp: 175,
+    shotType: 'wind', soundType: 'normal',
+    moves: {
+      combo: ['Frappe Ninjutsu', 'Coup de Pied Lunaire', 'Lame de l\'Ombre Vole'],
+      smash: 'TECHNIQUE SECRÈTE : CHOC DU CLONE', special: 'SHURIKENS DE LUMIÈRE LUNAIRE',
+      air: 'Piquée Ninja Inversible', grab: 'Substitution d\'Arbre & Tranchant Nuque',
+      ultra: 'DÉCUPLEMENT NINJA DES MILLE OMBRES'
     }
   }
 };
@@ -327,20 +653,16 @@ class SkyChordGame {
     this.ctx = this.canvas.getContext('2d');
     this.audio = new SkyChordAudio();
 
-    // Résolution logique
     this.width = 1280;
     this.height = 720;
     this.scale = 1;
 
-    // État : 'menu', 'cinematic', 'playing', 'gameover', 'ultra_cutin'
     this.state = 'playing';
-    this.mode = 'versus'; // 'versus', 'histoire', 'eclair', 'titan', 'survie'
+    this.mode = 'versus';
 
-    // Combattants
     this.p1 = null;
     this.p2 = null;
 
-    // Effets visuels Manga & DBZ Kai
     this.particles = [];
     this.hitSparks = [];
     this.speedLines = [];
@@ -348,12 +670,10 @@ class SkyChordGame {
     this.floatingTexts = [];
     this.ghostTrails = [];
 
-    // Timers de caméras
     this.shake = 0;
     this.hitStop = 0;
     this.time = 0;
 
-    // Cinématique Ultra & Histoire
     this.ultraCutin = null;
     this.storyChapter = 1;
     this.cinematicFrame = 0;
@@ -361,14 +681,11 @@ class SkyChordGame {
     this.cinematicSpeaker = '';
     this.cinematicTitle = '';
 
-    // Entrées
     this.keys = {};
     this.touch = {
       joy: { active: false, startX: 0, startY: 0, currX: 0, currY: 0, dx: 0, dy: 0 },
       attackHold: 0,
-      smashCharged: false,
-      lastTapDir: 0,
-      lastTapTime: 0
+      smashCharged: false
     };
 
     this.initCanvas();
@@ -392,7 +709,6 @@ class SkyChordGame {
   }
 
   bindEvents() {
-    // Clavier PC (Touches ZQSD / Flèches + Touches J, K, L, U, I)
     window.addEventListener('keydown', (e) => {
       this.audio.init();
       const k = e.key.toLowerCase();
@@ -404,10 +720,7 @@ class SkyChordGame {
       }
 
       if (this.state === 'playing' && this.p1) {
-        if (k === 'j') {
-          // Frappe / Charge Smash
-          this.touch.attackHold++;
-        }
+        if (k === 'j') this.touch.attackHold++;
         if (k === 'k') this.p1.special(this);
         if (k === ' ' || k === 'z' || k === 'arrowup') this.p1.jump();
         if (k === 'l') this.p1.toggleShield(true);
@@ -433,7 +746,6 @@ class SkyChordGame {
       }
     });
 
-    // Tactile mobile
     const c = this.canvas;
     const getPos = (touch) => {
       const r = c.getBoundingClientRect();
@@ -453,7 +765,6 @@ class SkyChordGame {
       for (let t of e.changedTouches) {
         const p = getPos(t);
         if (p.x < this.width * 0.45) {
-          // Joystick virtuel gauche
           this.touch.joy.active = true;
           this.touch.joy.id = t.identifier;
           this.touch.joy.startX = p.x;
@@ -461,7 +772,6 @@ class SkyChordGame {
           this.touch.joy.currX = p.x;
           this.touch.joy.currY = p.y;
         } else {
-          // Boutons tactiles droits
           this.handleButtonTouch(p, true);
         }
       }
@@ -499,63 +809,17 @@ class SkyChordGame {
     }, { passive: false });
   }
 
-  // 5 Boutons tactiles ergonomiques adaptés au pouce droit
   getButtons() {
     const p1 = this.p1;
     const isUltraReady = p1 && p1.kiGauge >= 100;
     const p1Data = p1 ? p1.data : FIGHTERS_DATA.sola;
 
     return [
-      {
-        id: 'attack',
-        label: 'FRAPPE',
-        sub: 'Combo / Smash',
-        x: 1120,
-        y: 565,
-        r: 68,
-        color: '#f59e0b',
-        glow: 'rgba(245, 158, 11, 0.6)'
-      },
-      {
-        id: 'special',
-        label: 'TIR SPÉ',
-        sub: p1Data.moves.special.slice(0, 14),
-        x: 980,
-        y: 590,
-        r: 56,
-        color: '#06b6d4',
-        glow: 'rgba(6, 182, 212, 0.6)'
-      },
-      {
-        id: 'jump',
-        label: 'SAUT',
-        sub: 'Double Saut',
-        x: 1120,
-        y: 415,
-        r: 58,
-        color: '#10b981',
-        glow: 'rgba(16, 185, 129, 0.6)'
-      },
-      {
-        id: 'shield',
-        label: 'GARDE',
-        sub: 'Parade Parfaite',
-        x: 980,
-        y: 445,
-        r: 52,
-        color: '#8b5cf6',
-        glow: 'rgba(139, 92, 246, 0.6)'
-      },
-      {
-        id: 'burst',
-        label: isUltraReady ? 'ULTRA !' : 'PRISE',
-        sub: isUltraReady ? 'CÉLESTE' : 'Brise-Garde',
-        x: 855,
-        y: 525,
-        r: 50,
-        color: isUltraReady ? '#f43f5e' : '#ec4899',
-        glow: isUltraReady ? 'rgba(244, 63, 94, 0.9)' : 'rgba(236, 72, 153, 0.5)'
-      }
+      { id: 'attack', label: 'FRAPPE', sub: 'Combo / Smash', x: 1120, y: 565, r: 68, color: '#f59e0b', glow: 'rgba(245, 158, 11, 0.6)' },
+      { id: 'special', label: 'TIR SPÉ', sub: p1Data.moves.special.slice(0, 14), x: 980, y: 590, r: 56, color: '#06b6d4', glow: 'rgba(6, 182, 212, 0.6)' },
+      { id: 'jump', label: 'SAUT', sub: 'Double Saut', x: 1120, y: 415, r: 58, color: '#10b981', glow: 'rgba(16, 185, 129, 0.6)' },
+      { id: 'shield', label: 'GARDE', sub: 'Parade Parfaite', x: 980, y: 445, r: 52, color: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.6)' },
+      { id: 'burst', label: isUltraReady ? 'ULTRA !' : 'PRISE', sub: isUltraReady ? 'CÉLESTE' : 'Brise-Garde', x: 855, y: 525, r: 50, color: isUltraReady ? '#f43f5e' : '#ec4899', glow: isUltraReady ? 'rgba(244, 63, 94, 0.9)' : 'rgba(236, 72, 153, 0.5)' }
     ];
   }
 
@@ -567,7 +831,6 @@ class SkyChordGame {
           if (isDown) {
             this.touch.attackDown = true;
           } else {
-            // Relâché : si tenu >= 12 frames = Smash chargé puissant, sinon combo rapide
             if (this.p1) {
               if (this.touch.attackHold >= 12) {
                 this.p1.releaseSmash(this);
@@ -594,7 +857,6 @@ class SkyChordGame {
     }
   }
 
-  // Démarrage d'un match avec combattants choisis
   startMatch(mode = 'versus', p1Id = 'sola', p2Id = 'aether') {
     this.mode = mode;
     const d1 = FIGHTERS_DATA[p1Id] || FIGHTERS_DATA.sola;
@@ -634,7 +896,7 @@ class SkyChordGame {
     this.cinematicFrame = 0;
 
     if (ch === 1) {
-      this.cinematicSpeaker = 'SOLA (Guerrière Solaire)';
+      this.cinematicSpeaker = 'SOLA (Zénith Solaire)';
       this.cinematicDialogue = '« Le Silence Obscur dévore le Chœur Céleste... Aether, laisse-moi passer pour éveiller l\'harmonie ! »';
       this.cinematicTitle = 'ÉPISODE I : LE CHOC DES ÉLÉMENTS SACRÉS';
     } else if (ch === 2) {
@@ -662,7 +924,6 @@ class SkyChordGame {
     }
   }
 
-  // Boucle de jeu 60 FPS
   startLoop() {
     const loop = () => {
       this.update();
@@ -675,7 +936,6 @@ class SkyChordGame {
   update() {
     this.time++;
 
-    // Hitstop DBZ Kai (freeze frame d'impact)
     if (this.hitStop > 0) {
       this.hitStop--;
       return;
@@ -683,7 +943,6 @@ class SkyChordGame {
 
     if (this.shake > 0) this.shake *= 0.88;
 
-    // Cut-in cinématique Ultra
     if (this.ultraCutin) {
       this.ultraCutin.timer--;
       if (this.ultraCutin.timer <= 0) this.ultraCutin = null;
@@ -697,7 +956,6 @@ class SkyChordGame {
 
     if (this.state !== 'playing') return;
 
-    // Charge continue du Smash tactile
     if (this.touch.attackDown && this.p1 && !this.p1.hitstun) {
       this.touch.attackHold++;
       this.p1.chargeSmash();
@@ -707,9 +965,7 @@ class SkyChordGame {
       this.audio.kiCharge(Math.min(1.0, this.touch.attackHold / 38));
     }
 
-    // Contrôles Joueur 1
     if (this.p1) {
-      // Déplacement Joystick ou Clavier
       let moveDir = 0;
       if (this.touch.joy.active && Math.abs(this.touch.joy.dx) > 0.2) {
         moveDir = Math.sign(this.touch.joy.dx);
@@ -721,7 +977,6 @@ class SkyChordGame {
 
       this.p1.move(moveDir);
 
-      // Dash tactile au double tap horizontal
       if (this.touch.joy.active && Math.abs(this.touch.joy.dx) > 0.85) {
         this.p1.dash();
       }
@@ -729,22 +984,18 @@ class SkyChordGame {
       this.p1.update(this);
     }
 
-    // IA Joueur 2
     if (this.p2) {
       this.updateAI(this.p2, this.p1);
       this.p2.update(this);
     }
 
-    // Collisions de combat corps-à-corps
     if (this.p1 && this.p2) {
       this.checkCombatCollisions(this.p1, this.p2);
       this.checkCombatCollisions(this.p2, this.p1);
     }
 
-    // Mise à jour des projectiles & rayons
     this.updateProjectiles();
 
-    // Textes flottants (Combos, Dégâts, Parade)
     for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
       const ft = this.floatingTexts[i];
       ft.y -= ft.vy;
@@ -752,7 +1003,6 @@ class SkyChordGame {
       if (ft.alpha <= 0) this.floatingTexts.splice(i, 1);
     }
 
-    // Particules & Étincelles
     for (let i = this.hitSparks.length - 1; i >= 0; i--) {
       const s = this.hitSparks[i];
       s.age++;
@@ -765,7 +1015,6 @@ class SkyChordGame {
       if (gt.alpha <= 0) this.ghostTrails.splice(i, 1);
     }
 
-    // Conditions de fin de match
     if (this.p1 && this.p1.hp <= 0) this.triggerGameOver(this.p2);
     if (this.p2 && this.p2.hp <= 0) {
       if (this.mode === 'histoire' && this.storyChapter < 3) {
@@ -776,14 +1025,12 @@ class SkyChordGame {
     }
   }
 
-  // IA dynamique et agressive
   updateAI(ai, target) {
     if (!ai || !target || ai.hitstun > 0) return;
     const dx = target.x - ai.x;
     const absDist = Math.abs(dx);
     ai.facing = Math.sign(dx) || 1;
 
-    // Déplacement vers la cible
     if (absDist > 160) {
       ai.move(ai.facing);
       if (Math.random() < 0.02) ai.dash();
@@ -793,12 +1040,10 @@ class SkyChordGame {
       ai.move(0);
     }
 
-    // Saut si la cible est en l'air
     if (target.y < ai.y - 60 && Math.random() < 0.04) {
       ai.jump();
     }
 
-    // Attaques variées de l'IA
     if (absDist < 140) {
       if (Math.random() < 0.06) {
         ai.normalCombo(this);
@@ -812,14 +1057,12 @@ class SkyChordGame {
       ai.special(this);
     }
 
-    // Parade occasionnelle
     if (target.isAttacking && absDist < 120 && Math.random() < 0.06) {
       ai.toggleShield(true);
       setTimeout(() => ai.toggleShield(false), 380);
     }
   }
 
-  // Gestion des collisions d'attaques
   checkCombatCollisions(attacker, victim) {
     if (!attacker.isAttacking || attacker.hitHasConnected) return;
 
@@ -832,10 +1075,9 @@ class SkyChordGame {
       hitbox.y < hurtbox.y + hurtbox.h &&
       hitbox.y + hitbox.h > hurtbox.y
     ) {
-      // Vérification de Parade Parfaite (Just-Guard)
       if (victim.isShielding && victim.shieldTimer < 10) {
         attacker.hitHasConnected = true;
-        attacker.hitstun = 30; // Contre garanti !
+        attacker.hitstun = 30;
         victim.toggleShield(false);
         this.audio.shield(true);
         this.shake = 10;
@@ -849,7 +1091,6 @@ class SkyChordGame {
       const isCrit = attacker.isSmashing;
       const comboStep = attacker.comboStep;
 
-      // Calcul des dégâts et de la poussée selon le type de coup
       let damage = 14;
       let knockX = attacker.facing * 8;
       let knockY = -6;
@@ -859,7 +1100,6 @@ class SkyChordGame {
         knockX = attacker.facing * (attacker.isTitan ? 28 : 22);
         knockY = -15;
       } else if (comboStep === 2) {
-        // Dernier coup du combo (Finisher)
         damage = 22;
         knockX = attacker.facing * 16;
         knockY = -12;
@@ -872,15 +1112,12 @@ class SkyChordGame {
       victim.takeDamage(damage, knockX, knockY, this, isCrit);
       attacker.kiGauge = Math.min(100, attacker.kiGauge + (isCrit ? 22 : 12));
 
-      // Bruitages et étincelles
       this.audio.punch(attacker.data.soundType, isCrit || comboStep === 2);
       this.addHitSpark(hitbox.x + hitbox.w * 0.5, hitbox.y + hitbox.h * 0.5, attacker.data.accent, isCrit ? 2.4 : 1.3, isCrit);
 
-      // Hitstop & secousse d'écran manga
       this.hitStop = isCrit ? 8 : (comboStep === 2 ? 5 : 2);
       this.shake = isCrit ? 18 : (comboStep === 2 ? 10 : 4);
 
-      // Affichage du combo
       attacker.comboHits++;
       if (attacker.comboHits > 1) {
         this.addFloatingText(attacker.x, attacker.y - attacker.h - 20, `${attacker.comboHits} HITS !`, attacker.data.accent, 1.4);
@@ -888,7 +1125,6 @@ class SkyChordGame {
     }
   }
 
-  // Projectiles spécifiques avec trajectoires uniques
   updateProjectiles() {
     for (let i = this.projectiles.length - 1; i >= 0; i--) {
       const p = this.projectiles[i];
@@ -896,10 +1132,8 @@ class SkyChordGame {
       p.y += p.vy;
       p.life--;
 
-      // Gravité pour le météore de Titan
       if (p.hasGravity) p.vy += 0.45;
 
-      // Attraction gravitationnelle de la singularité de Nox
       if (p.isSingularity) {
         const opp = (p.owner === this.p1) ? this.p2 : this.p1;
         if (opp) {
@@ -910,20 +1144,12 @@ class SkyChordGame {
         }
       }
 
-      // Traînée de particules
       if (this.time % 2 === 0) {
         this.hitSparks.push({
-          x: p.x,
-          y: p.y,
-          color: p.color,
-          scale: 0.6,
-          isCrit: false,
-          age: 0,
-          maxAge: 8
+          x: p.x, y: p.y, color: p.color, scale: 0.6, isCrit: false, age: 0, maxAge: 8
         });
       }
 
-      // Collision avec l'adversaire
       const target = (p.owner === this.p1) ? this.p2 : this.p1;
       if (target) {
         const hurt = target.getHurtbox();
@@ -949,15 +1175,11 @@ class SkyChordGame {
   }
 
   addHitSpark(x, y, color, scale = 1, isCrit = false) {
-    this.hitSparks.push({
-      x, y, color, scale, isCrit, age: 0, maxAge: isCrit ? 16 : 9
-    });
+    this.hitSparks.push({ x, y, color, scale, isCrit, age: 0, maxAge: isCrit ? 16 : 9 });
   }
 
   addFloatingText(x, y, text, color, scale = 1.0) {
-    this.floatingTexts.push({
-      x, y, text, color, scale, vy: 1.8, alpha: 1.0
-    });
+    this.floatingTexts.push({ x, y, text, color, scale, vy: 1.8, alpha: 1.0 });
   }
 
   triggerGameOver(winner) {
@@ -965,46 +1187,28 @@ class SkyChordGame {
     this.winner = winner;
   }
 
-  // ==========================================
-  // 4. RENDU GRAPHIQUE MANGA & ANIME DBZ KAI
-  // ==========================================
   render() {
     const c = this.ctx;
     c.save();
 
-    // Secousse dynamique d'écran
     if (this.shake > 0) {
       const sx = (Math.random() * 2 - 1) * this.shake;
       const sy = (Math.random() * 2 - 1) * this.shake;
       c.translate(sx, sy);
     }
 
-    // 1. Décor Céleste & Ruines flottantes
     this.renderArena(c);
-
-    // 2. Traînées de dédoublement (Ghost Shadows)
     this.renderGhostTrails(c);
-
-    // 3. Projectiles Célestes
     this.renderProjectiles(c);
 
-    // 4. Les Combattants Cel-Shadés
     if (this.p1) this.p1.render(c, this.time);
     if (this.p2) this.p2.render(c, this.time);
 
-    // 5. Étincelles & Étoiles de Choc
     this.renderHitSparks(c);
-
-    // 6. Textes Flottants (Dégâts, Combos)
     this.renderFloatingTexts(c);
-
-    // 7. HUD de Combat Céleste
     this.renderHUD(c);
-
-    // 8. Commandes Tactiles Mobiles 5 Touches
     this.renderTouchControls(c);
 
-    // 9. Cut-in Anime Ultra & Écrans
     if (this.ultraCutin) this.renderUltraCutin(c);
     if (this.state === 'cinematic') this.renderCinematic(c);
     if (this.state === 'gameover') this.renderGameOver(c);
@@ -1013,7 +1217,6 @@ class SkyChordGame {
   }
 
   renderArena(c) {
-    // Ciel Cosmique Nébulaire
     const grad = c.createLinearGradient(0, 0, 0, this.height);
     grad.addColorStop(0, '#060411');
     grad.addColorStop(0.5, '#161233');
@@ -1021,7 +1224,6 @@ class SkyChordGame {
     c.fillStyle = grad;
     c.fillRect(0, 0, this.width, this.height);
 
-    // Constellations en arrière-plan
     c.fillStyle = 'rgba(255, 255, 255, 0.75)';
     for (let i = 0; i < 45; i++) {
       const sx = (i * 103 + this.time * 0.15) % this.width;
@@ -1032,7 +1234,6 @@ class SkyChordGame {
       c.fill();
     }
 
-    // Plateforme Céleste Sacrée
     const platY = 560;
     c.save();
     c.fillStyle = '#171426';
@@ -1043,7 +1244,6 @@ class SkyChordGame {
     c.fill();
     c.stroke();
 
-    // Frise gravée d'or et runes
     c.strokeStyle = 'rgba(251, 191, 36, 0.45)';
     c.lineWidth = 2.5;
     for (let x = 180; x < 1100; x += 75) {
@@ -1063,7 +1263,6 @@ class SkyChordGame {
       c.scale(gt.facing, 1);
       c.globalAlpha = Math.max(0, gt.alpha * 0.45);
       c.fillStyle = gt.color;
-      // Silhouette de course
       c.beginPath();
       c.roundRect(-gt.w * 0.5, -gt.h, gt.w, gt.h, 6);
       c.fill();
@@ -1077,7 +1276,6 @@ class SkyChordGame {
       c.translate(p.x, p.y);
 
       if (p.isBeam) {
-        // Rayon laser continu façon Kamehameha
         const beamW = 140;
         const beamH = p.radius * 2;
         const bGrad = c.createLinearGradient(-beamW * 0.5, 0, beamW * 0.5, 0);
@@ -1089,7 +1287,6 @@ class SkyChordGame {
         c.ellipse(0, 0, beamW, beamH, 0, 0, Math.PI * 2);
         c.fill();
       } else if (p.isSingularity) {
-        // Trou noir tourbillonnant
         c.fillStyle = '#0f051d';
         c.strokeStyle = p.color;
         c.lineWidth = 4;
@@ -1098,14 +1295,12 @@ class SkyChordGame {
         c.fill();
         c.stroke();
 
-        // Anneau d'accrétion tournoyant
         c.strokeStyle = '#c084fc';
         c.lineWidth = 2;
         c.beginPath();
         c.ellipse(0, 0, p.radius * 1.6, p.radius * 0.6, this.time * 0.1, 0, Math.PI * 2);
         c.stroke();
       } else {
-        // Boule d'énergie / Météore classique
         c.fillStyle = '#ffffff';
         c.beginPath();
         c.arc(0, 0, p.radius * 0.6, 0, Math.PI * 2);
@@ -1128,7 +1323,6 @@ class SkyChordGame {
       const pr = s.age / s.maxAge;
       const alpha = 1 - pr;
 
-      // Étoile de choc manga à 8 branches
       c.fillStyle = s.color;
       c.globalAlpha = alpha;
       c.beginPath();
@@ -1147,7 +1341,6 @@ class SkyChordGame {
       c.closePath();
       c.fill();
 
-      // Cœur blanc éclatant
       c.fillStyle = '#ffffff';
       c.beginPath();
       c.arc(0, 0, rIn * 1.2, 0, Math.PI * 2);
@@ -1171,14 +1364,12 @@ class SkyChordGame {
     }
   }
 
-  // HUD de combat avec barres de PV, jauge de Ki et icônes
   renderHUD(c) {
     if (!this.p1 || !this.p2) return;
 
     this.renderFighterCard(c, this.p1, 60, 35, false);
     this.renderFighterCard(c, this.p2, this.width - 440, 35, true);
 
-    // Titre du mode
     c.save();
     c.font = 'bold 20px "Cinzel", serif';
     c.textAlign = 'center';
@@ -1186,7 +1377,7 @@ class SkyChordGame {
     c.shadowColor = 'rgba(251, 191, 36, 0.8)';
     c.shadowBlur = 12;
     const modeNames = {
-      versus: 'DUEL VERSUS CÉLESTE',
+      versus: 'DUEL VERSUS CÉLESTE (24 COMBATTANTS)',
       histoire: 'MODE HISTOIRE — CHANT DES ORIGINES',
       eclair: '⚡ MORT SUBITE (300% DÉGÂTS) ⚡',
       titan: '☠ DÉFI DU TITAN KRONOS ☠'
@@ -1200,7 +1391,6 @@ class SkyChordGame {
     const w = 380;
     const h = 65;
 
-    // Panneau de verre sombre
     c.fillStyle = 'rgba(12, 8, 26, 0.88)';
     c.strokeStyle = f.data.accent;
     c.lineWidth = 3;
@@ -1209,7 +1399,6 @@ class SkyChordGame {
     c.fill();
     c.stroke();
 
-    // Barre de PV
     const hpRatio = Math.max(0, f.hp / f.data.maxHp);
     const hpGrad = c.createLinearGradient(x, 0, x + w, 0);
     hpGrad.addColorStop(0, '#ef4444');
@@ -1220,14 +1409,12 @@ class SkyChordGame {
     c.roundRect(x + 8, y + 26, (w - 16) * hpRatio, 20, 4);
     c.fill();
 
-    // Jauge de Ki / Harmonie (Ultra)
     const kiRatio = Math.max(0, f.kiGauge / 100);
     c.fillStyle = f.kiGauge >= 100 ? '#f43f5e' : '#38bdf8';
     c.beginPath();
     c.roundRect(x + 8, y + 50, (w - 16) * kiRatio, 6, 2);
     c.fill();
 
-    // Nom et Pourcentage façon Smash
     c.font = '900 17px "Outfit", sans-serif';
     c.fillStyle = '#ffffff';
     c.textAlign = isRight ? 'right' : 'left';
@@ -1241,11 +1428,9 @@ class SkyChordGame {
     c.restore();
   }
 
-  // Commandes tactiles mobiles adaptées à 5 touches
   renderTouchControls(c) {
     const btns = this.getButtons();
 
-    // 1. Joystick gauche
     const jx = this.touch.joy.active ? this.touch.joy.startX : 160;
     const jy = this.touch.joy.active ? this.touch.joy.startY : 550;
     const jr = 65;
@@ -1259,7 +1444,6 @@ class SkyChordGame {
     c.fill();
     c.stroke();
 
-    // Tête du stick
     const knobX = jx + this.touch.joy.dx * jr * 0.7;
     const knobY = jy + this.touch.joy.dy * jr * 0.7;
     c.fillStyle = 'rgba(251, 191, 36, 0.9)';
@@ -1268,7 +1452,6 @@ class SkyChordGame {
     c.fill();
     c.restore();
 
-    // 2. Les 5 boutons droits
     for (let b of btns) {
       c.save();
       c.fillStyle = 'rgba(15, 12, 35, 0.55)';
@@ -1279,21 +1462,18 @@ class SkyChordGame {
       c.fill();
       c.stroke();
 
-      // Texte principal
       c.font = `900 ${Math.round(b.r * 0.33)}px "Outfit", sans-serif`;
       c.fillStyle = '#ffffff';
       c.textAlign = 'center';
       c.textBaseline = 'middle';
       c.fillText(b.label, b.x, b.y - (b.sub ? 6 : 0));
 
-      // Sous-titre explicatif
       if (b.sub) {
         c.font = `600 ${Math.round(b.r * 0.19)}px "Outfit", sans-serif`;
         c.fillStyle = b.color;
         c.fillText(b.sub, b.x, b.y + b.r * 0.32);
       }
 
-      // Anneau de charge Smash sur FRAPPE
       if (b.id === 'attack' && this.touch.attackHold > 0) {
         const ratio = Math.min(1.0, this.touch.attackHold / 38);
         c.strokeStyle = this.touch.smashCharged ? '#38bdf8' : '#fbbf24';
@@ -1308,18 +1488,15 @@ class SkyChordGame {
           c.fillText('MAX !', b.x, b.y - b.r - 14);
         }
       }
-
       c.restore();
     }
   }
 
-  // Gros plan anime cinématographique lors d'un ULTRA CÉLESTE
   renderUltraCutin(c) {
     const u = this.ultraCutin;
     if (!u) return;
 
     c.save();
-    // Bande cinématographique traversante
     c.fillStyle = 'rgba(0, 0, 0, 0.88)';
     c.fillRect(0, 220, this.width, 280);
 
@@ -1330,7 +1507,6 @@ class SkyChordGame {
     c.moveTo(0, 500); c.lineTo(this.width, 500);
     c.stroke();
 
-    // Lignes de vitesse manga traversantes
     c.strokeStyle = 'rgba(255, 255, 255, 0.4)';
     c.lineWidth = 2;
     for (let i = 0; i < 20; i++) {
@@ -1341,8 +1517,7 @@ class SkyChordGame {
       c.stroke();
     }
 
-    // Nom de l'attaque Ultra en gros caractères manga
-    c.font = '900 48px "Cinzel", "Outfit", serif';
+    c.font = '900 44px "Cinzel", "Outfit", serif';
     c.fillStyle = u.fighter.data.accent;
     c.textAlign = 'center';
     c.shadowColor = u.fighter.data.accent;
@@ -1357,16 +1532,13 @@ class SkyChordGame {
     c.restore();
   }
 
-  // Cinématiques d'Histoire façon Dragon Ball Z Kai
   renderCinematic(c) {
     c.save();
-    // Letterbox cinéma format 2.39:1
     const barH = 85;
     c.fillStyle = '#000000';
     c.fillRect(0, 0, this.width, barH);
     c.fillRect(0, this.height - barH, this.width, barH);
 
-    // Titre d'épisode
     c.font = 'bold 30px "Cinzel", serif';
     c.textAlign = 'center';
     c.fillStyle = '#fde047';
@@ -1374,7 +1546,6 @@ class SkyChordGame {
     c.shadowBlur = 18;
     c.fillText(this.cinematicTitle || '', this.width / 2, 58);
 
-    // Boîte de dialogue anime
     c.fillStyle = 'rgba(15, 10, 30, 0.94)';
     c.strokeStyle = '#f59e0b';
     c.lineWidth = 3;
@@ -1383,7 +1554,6 @@ class SkyChordGame {
     c.fill();
     c.stroke();
 
-    // Orateur & Texte
     c.font = 'bold 20px "Outfit", sans-serif';
     c.fillStyle = '#38bdf8';
     c.textAlign = 'left';
@@ -1418,7 +1588,6 @@ class SkyChordGame {
     c.shadowBlur = 0;
     c.fillText(`${this.winner ? this.winner.data.name : 'VAINQUEUR'} TRIOMPHE DU COMBAT !`, this.width / 2, 350);
 
-    // Bouton Rejouer
     c.fillStyle = '#ea580c';
     c.beginPath();
     c.roundRect(this.width / 2 - 140, 410, 280, 60, 30);
@@ -1432,7 +1601,7 @@ class SkyChordGame {
 }
 
 // ==========================================
-// 5. CLASSE FIGHTER (COMBATTANT ANIME ORIGINAL)
+// 4. CLASSE FIGHTER (ANATOMIE & COIFFURES)
 // ==========================================
 class Fighter {
   constructor(data, x, y, facing = 1, isAi = false) {
@@ -1446,34 +1615,28 @@ class Fighter {
     this.isTitan = !!data.isTitan;
     this.scale = data.scale || 1.0;
 
-    // Dimensions
     this.w = 56 * this.scale;
     this.h = 108 * this.scale;
 
-    // Stats de combat
     this.hp = data.maxHp;
     this.damagePercent = 0;
-    this.kiGauge = 30; // Jauge d'Harmonie Céleste (0 à 100)
+    this.kiGauge = 30;
     this.onGround = false;
     this.jumpsLeft = 2;
 
-    // Système de Combos & Attaques
     this.comboStep = 0;
     this.comboTimer = 0;
     this.comboHits = 0;
     this.isAttacking = false;
     this.attackTimer = 0;
-    this.attackType = 'normal'; // 'normal', 'smash', 'air', 'grab'
+    this.attackType = 'normal';
 
-    // Charge du Smash
     this.isSmashing = false;
     this.smashCharge = 0;
 
-    // Bouclier & Parade
     this.isShielding = false;
     this.shieldTimer = 0;
 
-    // États
     this.hitstun = 0;
     this.hitHasConnected = false;
     this.isDashing = false;
@@ -1502,12 +1665,10 @@ class Fighter {
     }
   }
 
-  // 1. Combo normal 3 coups (Tap FRAPPE)
   normalCombo(game) {
     if (this.isAttacking || this.hitstun > 0 || this.isShielding) return;
 
     if (!this.onGround) {
-      // Attaque aérienne plongeante
       this.airAttack(game);
       return;
     }
@@ -1525,23 +1686,20 @@ class Fighter {
     this.comboTimer = 35;
     this.hitHasConnected = false;
 
-    // Petite impulsion vers l'avant à chaque coup
     this.vx = this.facing * (this.comboStep === 2 ? 8 : 4);
     game.audio.punch(this.data.soundType, false);
   }
 
-  // 2. Attaque aérienne spécifique
   airAttack(game) {
     this.isAttacking = true;
     this.attackType = 'air';
     this.attackTimer = 18;
     this.hitHasConnected = false;
-    this.vy = 8; // Plongée
+    this.vy = 8;
     this.vx = this.facing * 9;
     game.audio.punch(this.data.soundType, true);
   }
 
-  // 3. Charge du Coup Smash
   chargeSmash() {
     if (this.hitstun > 0 || this.isShielding) return;
     this.isAttacking = true;
@@ -1550,21 +1708,18 @@ class Fighter {
     this.smashCharge = Math.min(1.0, this.smashCharge + 0.03);
   }
 
-  // 4. Relâchement du Coup Smash Dévastateur
   releaseSmash(game) {
     if (!this.isSmashing) return;
     this.attackTimer = 26;
     this.isSmashing = false;
     this.hitHasConnected = false;
 
-    // Grande impulsion Smash
     this.vx = this.facing * (this.isTitan ? 16 : 22);
     game.audio.punch(this.data.soundType, true);
     game.addHitSpark(this.x + this.facing * 50, this.y - this.h * 0.5, this.data.accent, 2.2, true);
     this.smashCharge = 0;
   }
 
-  // 5. Tir ou Attaque Spéciale spécifique
   special(game) {
     if (this.isAttacking || this.hitstun > 0 || this.isShielding) return;
     this.isAttacking = true;
@@ -1573,72 +1728,61 @@ class Fighter {
 
     game.audio.projectileSound(this.data.shotType);
 
-    if (this.data.id === 'sola') {
-      // Rayon Solaire Nova (perçant multi-hit)
+    const sType = this.data.shotType;
+    if (sType === 'beam') {
       game.projectiles.push({
-        x: this.x + this.facing * 40,
-        y: this.y - this.h * 0.55,
-        vx: this.facing * 22,
-        vy: 0,
-        radius: 24,
-        damage: 34,
-        color: '#fbbf24',
-        isBeam: true,
-        owner: this,
-        life: 55
+        x: this.x + this.facing * 40, y: this.y - this.h * 0.55, vx: this.facing * 22, vy: 0,
+        radius: 24, damage: 34, color: this.data.accent, isBeam: true, owner: this, life: 55
       });
-    } else if (this.data.id === 'aether') {
-      // 3 Lances de foudre Raijin décalées
+    } else if (sType === 'lightning') {
       [-3, 0, 3].forEach((vy, idx) => {
         game.projectiles.push({
-          x: this.x + this.facing * (35 + idx * 10),
-          y: this.y - this.h * 0.55 + vy * 8,
-          vx: this.facing * 24,
-          vy: vy * 0.8,
-          radius: 14,
-          damage: 18,
-          color: '#38bdf8',
-          owner: this,
-          life: 48
+          x: this.x + this.facing * (35 + idx * 10), y: this.y - this.h * 0.55 + vy * 8,
+          vx: this.facing * 24, vy: vy * 0.8, radius: 14, damage: 18, color: this.data.accent,
+          owner: this, life: 48
         });
       });
-    } else if (this.data.id === 'nox') {
-      // Singularité du Néant (trou noir aspirant)
+    } else if (sType === 'void') {
       game.projectiles.push({
-        x: this.x + this.facing * 45,
-        y: this.y - this.h * 0.55,
-        vx: this.facing * 9,
-        vy: 0,
-        radius: 28,
-        damage: 38,
-        color: '#a855f7',
-        isSingularity: true,
-        owner: this,
-        life: 75
+        x: this.x + this.facing * 45, y: this.y - this.h * 0.55, vx: this.facing * 9, vy: 0,
+        radius: 28, damage: 38, color: this.data.accent, isSingularity: true, owner: this, life: 75
+      });
+    } else if (sType === 'rock') {
+      game.projectiles.push({
+        x: this.x + this.facing * 50, y: this.y - this.h * 0.65, vx: this.facing * 12, vy: -7,
+        radius: 36, damage: 48, color: this.data.accent, hasGravity: true, owner: this, life: 70
+      });
+    } else if (sType === 'flame') {
+      [-2, 0, 2].forEach((vy, idx) => {
+        game.projectiles.push({
+          x: this.x + this.facing * 40, y: this.y - this.h * 0.55 + vy * 6, vx: this.facing * 18, vy: vy * 0.5,
+          radius: 18, damage: 24, color: this.data.accent, owner: this, life: 50
+        });
+      });
+    } else if (sType === 'crystal') {
+      [-3, 3].forEach((vy, idx) => {
+        game.projectiles.push({
+          x: this.x + this.facing * 40, y: this.y - this.h * 0.55 + vy * 8, vx: this.facing * 25, vy: vy * 0.6,
+          radius: 12, damage: 20, color: this.data.accent, owner: this, life: 45
+        });
+      });
+    } else if (sType === 'arrow') {
+      game.projectiles.push({
+        x: this.x + this.facing * 42, y: this.y - this.h * 0.55, vx: this.facing * 28, vy: 0,
+        radius: 14, damage: 32, color: this.data.accent, owner: this, life: 45
       });
     } else {
-      // Météore de Roche Volcanique (Titan)
       game.projectiles.push({
-        x: this.x + this.facing * 50,
-        y: this.y - this.h * 0.65,
-        vx: this.facing * 12,
-        vy: -7,
-        radius: 36,
-        damage: 48,
-        color: '#ef4444',
-        hasGravity: true,
-        owner: this,
-        life: 70
+        x: this.x + this.facing * 40, y: this.y - this.h * 0.55, vx: this.facing * 20, vy: 0,
+        radius: 18, damage: 28, color: this.data.accent, owner: this, life: 52
       });
     }
   }
 
-  // 6. Prise au corps-à-corps OU Ultra Céleste si jauge pleine
   grabOrUltra(game) {
     if (this.hitstun > 0) return;
 
     if (this.kiGauge >= 100) {
-      // DÉCHAÎNEMENT ULTRA CÉLESTE
       this.kiGauge = 0;
       this.isAttacking = true;
       this.attackTimer = 45;
@@ -1655,7 +1799,6 @@ class Fighter {
       return;
     }
 
-    // Prise normale
     this.isAttacking = true;
     this.attackType = 'grab';
     this.attackTimer = 22;
@@ -1718,15 +1861,11 @@ class Fighter {
   }
 
   update(game) {
-    // Gravité
     this.vy += 0.95;
     this.x += this.vx;
     this.y += this.vy;
-
-    // Ralentissement horizontal
     this.vx *= 0.84;
 
-    // Sol arène
     const groundY = 560;
     if (this.y >= groundY) {
       this.y = groundY;
@@ -1737,11 +1876,9 @@ class Fighter {
       this.onGround = false;
     }
 
-    // Limites de l'arène
     if (this.x < 140) { this.x = 140; this.vx = 0; }
     if (this.x > 1140) { this.x = 1140; this.vx = 0; }
 
-    // Timers
     if (this.attackTimer > 0) {
       this.attackTimer--;
       if (this.attackTimer === 0) {
@@ -1759,26 +1896,16 @@ class Fighter {
       if (this.dashTimer === 0) this.isDashing = false;
       if (this.dashTimer % 3 === 0) {
         game.ghostTrails.push({
-          x: this.x,
-          y: this.y,
-          facing: this.facing,
-          w: this.w,
-          h: this.h,
-          color: this.data.accent,
-          alpha: 1.0
+          x: this.x, y: this.y, facing: this.facing, w: this.w, h: this.h, color: this.data.accent, alpha: 1.0
         });
       }
     }
   }
 
-  // ==========================================
-  // 6. DESSIN DU COMBATTANT CEL-SHADÉ DÉTAILLÉ
-  // ==========================================
   render(c, time) {
     c.save();
     c.translate(this.x, this.y);
 
-    // 1. Aura de Ki Flamboyante (Super Saiyan / Éveil)
     const isCharging = this.isSmashing || (this.isAttacking && this.attackTimer > 12);
     const isAwakened = this.hp < this.data.maxHp * 0.35 || this.kiGauge >= 100;
 
@@ -1786,7 +1913,6 @@ class Fighter {
       this.renderKiAura(c, time, isAwakened);
     }
 
-    // 2. Bouclier énergétique sphérique DBZ Kai
     if (this.isShielding) {
       c.save();
       c.strokeStyle = this.data.accent;
@@ -1799,13 +1925,11 @@ class Fighter {
       c.restore();
     }
 
-    // 3. Ombre portée au sol
     c.fillStyle = 'rgba(0, 0, 0, 0.45)';
     c.beginPath();
     c.ellipse(0, -2, this.w * 0.85, 10, 0, 0, Math.PI * 2);
     c.fill();
 
-    // 4. Orientation & Corps détaillé
     c.scale(this.facing, 1);
     this.renderFighterBody(c, time);
 
@@ -1818,7 +1942,6 @@ class Fighter {
     const hAura = this.h * 1.35;
     const wAura = this.w * 1.6;
 
-    // Flammes ondulantes montantes
     for (let k = 0; k < 8; k++) {
       const ang = (Math.PI / 4) * k;
       const flicker = Math.sin(time * 0.35 + k) * 14;
@@ -1833,7 +1956,6 @@ class Fighter {
       c.fill();
     }
 
-    // Arcs électriques SSJ2
     c.strokeStyle = '#e0f2fe';
     c.lineWidth = 2.5;
     for (let e = 0; e < 4; e++) {
@@ -1848,7 +1970,6 @@ class Fighter {
     c.restore();
   }
 
-  // Dessin complet de l'anatomie et de la tenue manga
   renderFighterBody(c, time) {
     const w = this.w;
     const h = this.h;
@@ -1859,20 +1980,16 @@ class Fighter {
     c.lineWidth = 3.5;
     c.lineJoin = 'round';
 
-    // Animation de respiration / bobbing
     const breath = Math.sin(time * 0.1) * 2;
 
-    // 1. Jambes & Bottes Cel-Shadées
+    // 1. Jambes & Bottes
     c.fillStyle = d.giColor;
     c.beginPath();
-    // Jambe arrière
     c.roundRect(-w * 0.42, -h * 0.44 + breath, w * 0.36, h * 0.44, 4);
-    // Jambe avant
     c.roundRect(w * 0.04, -h * 0.44 + breath, w * 0.36, h * 0.44, 4);
     c.fill();
     c.stroke();
 
-    // Bottes de combat
     c.fillStyle = d.sashColor;
     c.beginPath();
     c.roundRect(-w * 0.44, -h * 0.18 + breath, w * 0.4, h * 0.18, [0, 0, 4, 4]);
@@ -1880,14 +1997,13 @@ class Fighter {
     c.fill();
     c.stroke();
 
-    // 2. Torse / Tunique d'arts martiaux
+    // 2. Torse
     c.fillStyle = d.giColor;
     c.beginPath();
     c.roundRect(-w * 0.46, -h * 0.78 + breath, w * 0.92, h * 0.36, 6);
     c.fill();
     c.stroke();
 
-    // Ombrage de pli cel-shading du gi
     c.fillStyle = d.giShadow;
     c.beginPath();
     c.moveTo(-w * 0.46, -h * 0.78 + breath);
@@ -1895,14 +2011,13 @@ class Fighter {
     c.lineTo(-w * 0.46, -h * 0.5 + breath);
     c.fill();
 
-    // Ceinture / Écharpe flottante (Sash)
+    // Ceinture / Écharpe
     c.fillStyle = d.sashColor;
     c.beginPath();
     c.roundRect(-w * 0.5, -h * 0.46 + breath, w * 1.0, h * 0.09, 3);
     c.fill();
     c.stroke();
 
-    // Pans de ceinture flottants avec physique
     const sashSway = Math.sin(time * 0.2) * 8;
     c.beginPath();
     c.moveTo(-w * 0.1, -h * 0.4 + breath);
@@ -1912,17 +2027,16 @@ class Fighter {
     c.fill();
     c.stroke();
 
-    // Écusson / Médaillon Céleste sur le torse
+    // Médaillon Céleste
     c.fillStyle = d.accent;
     c.beginPath();
     c.arc(0, -h * 0.65 + breath, w * 0.16, 0, Math.PI * 2);
     c.fill();
     c.stroke();
 
-    // 3. Tête & Visage Manga Expressif
+    // 3. Tête & Visage
     c.fillStyle = d.skinColor;
     c.beginPath();
-    // Mâchoire pointue style anime
     c.moveTo(-w * 0.32, -h * 0.9 + breath);
     c.lineTo(-w * 0.28, -h * 0.78 + breath);
     c.lineTo(0, -h * 0.73 + breath);
@@ -1932,26 +2046,23 @@ class Fighter {
     c.fill();
     c.stroke();
 
-    // Yeux Anime expressifs
+    // Yeux Anime
     c.fillStyle = '#ffffff';
     c.beginPath();
     c.ellipse(w * 0.12, -h * 0.83 + breath, w * 0.11, w * 0.07, 0, 0, Math.PI * 2);
     c.fill();
     c.stroke();
 
-    // Iris & Pupille
     c.fillStyle = d.eyeColor;
     c.beginPath();
     c.arc(w * 0.14, -h * 0.83 + breath, w * 0.05, 0, Math.PI * 2);
     c.fill();
 
-    // Éclat de lumière dans l'œil (Specular Highlight)
     c.fillStyle = '#ffffff';
     c.beginPath();
     c.arc(w * 0.16, -h * 0.84 + breath, 2, 0, Math.PI * 2);
     c.fill();
 
-    // Sourcil déterminé
     c.strokeStyle = d.hairShadow;
     c.lineWidth = 2.5;
     c.beginPath();
@@ -1959,51 +2070,76 @@ class Fighter {
     c.lineTo(w * 0.24, -h * 0.87 + breath);
     c.stroke();
 
-    // 4. Chevelure Anime Manga (Super Saiyan / Spiky Hair)
+    // 4. Coiffure selon le type du personnage
     c.strokeStyle = '#050308';
     c.lineWidth = 3.5;
     c.fillStyle = d.hairColor;
     c.beginPath();
-    c.moveTo(-w * 0.35, -h * 0.88 + breath);
-    c.lineTo(-w * 0.65, -h * 1.05 + breath);
-    c.lineTo(-w * 0.25, -h * 0.98 + breath);
-    c.lineTo(-w * 0.45, -h * 1.25 + breath);
-    c.lineTo(-w * 0.05, -h * 1.05 + breath);
-    c.lineTo(w * 0.1, -h * 1.35 + breath); // Épi principal sommet
-    c.lineTo(w * 0.25, -h * 1.05 + breath);
-    c.lineTo(w * 0.65, -h * 1.25 + breath);
-    c.lineTo(w * 0.4, -h * 0.95 + breath);
-    c.lineTo(w * 0.65, -h * 0.88 + breath);
-    c.lineTo(w * 0.35, -h * 0.82 + breath);
-    c.closePath();
-    c.fill();
-    c.stroke();
 
-    // Mèches d'ombrage de la chevelure
-    c.fillStyle = d.hairShadow;
-    c.beginPath();
-    c.moveTo(0, -h * 1.05 + breath);
-    c.lineTo(w * 0.1, -h * 1.35 + breath);
-    c.lineTo(w * 0.18, -h * 1.05 + breath);
-    c.fill();
+    if (d.hairType === 'cowl') {
+      // Capuche d'assassin mystique
+      c.arc(0, -h * 0.88 + breath, w * 0.44, Math.PI, 0);
+      c.lineTo(w * 0.45, -h * 0.75 + breath);
+      c.lineTo(-w * 0.45, -h * 0.75 + breath);
+      c.closePath();
+      c.fill();
+      c.stroke();
+    } else if (d.hairType === 'helmet') {
+      // Casque / Heaume blindé à cornes
+      c.arc(0, -h * 0.9 + breath, w * 0.42, Math.PI, 0);
+      c.lineTo(w * 0.6, -h * 1.15 + breath);
+      c.lineTo(w * 0.35, -h * 0.95 + breath);
+      c.lineTo(-w * 0.35, -h * 0.95 + breath);
+      c.lineTo(-w * 0.6, -h * 1.15 + breath);
+      c.closePath();
+      c.fill();
+      c.stroke();
+    } else if (d.hairType === 'long') {
+      // Longue chevelure flottante
+      c.moveTo(-w * 0.4, -h * 0.88 + breath);
+      c.lineTo(-w * 0.55, -h * 1.15 + breath);
+      c.lineTo(-w * 0.2, -h * 1.05 + breath);
+      c.lineTo(0, -h * 1.25 + breath);
+      c.lineTo(w * 0.2, -h * 1.05 + breath);
+      c.lineTo(w * 0.55, -h * 1.15 + breath);
+      c.lineTo(w * 0.4, -h * 0.88 + breath);
+      c.lineTo(w * 0.5, -h * 0.55 + breath);
+      c.lineTo(-w * 0.5, -h * 0.55 + breath);
+      c.closePath();
+      c.fill();
+      c.stroke();
+    } else {
+      // Chevelure manga spiky / Super Saiyan
+      c.moveTo(-w * 0.35, -h * 0.88 + breath);
+      c.lineTo(-w * 0.65, -h * 1.05 + breath);
+      c.lineTo(-w * 0.25, -h * 0.98 + breath);
+      c.lineTo(-w * 0.45, -h * 1.25 + breath);
+      c.lineTo(-w * 0.05, -h * 1.05 + breath);
+      c.lineTo(w * 0.1, -h * 1.35 + breath);
+      c.lineTo(w * 0.25, -h * 1.05 + breath);
+      c.lineTo(w * 0.65, -h * 1.25 + breath);
+      c.lineTo(w * 0.4, -h * 0.95 + breath);
+      c.lineTo(w * 0.65, -h * 0.88 + breath);
+      c.lineTo(w * 0.35, -h * 0.82 + breath);
+      c.closePath();
+      c.fill();
+      c.stroke();
+    }
 
     // 5. Bras & Position d'Attaque
     if (this.isAttacking) {
-      // Bras projeté vers l'avant
       c.fillStyle = d.giColor;
       c.beginPath();
       c.roundRect(w * 0.2, -h * 0.72 + breath, w * 0.85, h * 0.2, 4);
       c.fill();
       c.stroke();
 
-      // Poing étincelant avec onde de Ki
       c.fillStyle = d.accent;
       c.beginPath();
       c.arc(w * 1.08, -h * 0.62 + breath, w * 0.24, 0, Math.PI * 2);
       c.fill();
       c.stroke();
     } else {
-      // Bras au repos en garde
       c.fillStyle = d.giColor;
       c.beginPath();
       c.roundRect(w * 0.05, -h * 0.72 + breath, w * 0.32, h * 0.38, 4);
@@ -2015,5 +2151,5 @@ class Fighter {
   }
 }
 
-// Initialisation globale
 window.SkyChordGame = SkyChordGame;
+window.FIGHTERS_DATA = FIGHTERS_DATA;

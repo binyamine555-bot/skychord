@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>SkyChord : Combat Céleste — Moteur Anime & Manga Original</title>
+  <title>SkyChord : Combat Céleste — Les 24 Combattants Manga Originaux</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Cinzel:wght@700;900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
@@ -42,8 +42,8 @@
     #topBar {
       position: absolute;
       top: 10px;
-      left: 16px;
-      right: 16px;
+      left: 14px;
+      right: 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -79,15 +79,16 @@
       transform: scale(1.04);
     }
     .select-btn {
-      background: rgba(20, 15, 40, 0.85);
-      border: 1px solid rgba(56, 189, 248, 0.4);
+      background: rgba(20, 15, 40, 0.9);
+      border: 1px solid rgba(56, 189, 248, 0.5);
       color: #38bdf8;
-      padding: 6px 12px;
+      padding: 6px 10px;
       border-radius: 16px;
       font-size: 12px;
       font-weight: 800;
       cursor: pointer;
       outline: none;
+      max-width: 175px;
     }
 
     /* Sélecteur de mode rapide */
@@ -99,8 +100,8 @@
       display: flex;
       gap: 6px;
       z-index: 100;
-      background: rgba(10, 5, 20, 0.88);
-      padding: 5px 10px;
+      background: rgba(10, 5, 20, 0.9);
+      padding: 5px 12px;
       border-radius: 30px;
       border: 1px solid rgba(251, 191, 36, 0.35);
       backdrop-filter: blur(10px);
@@ -122,14 +123,14 @@
       border: 1px solid rgba(245, 158, 11, 0.6);
     }
 
-    /* Modal Liste des Coups (Movelist) */
-    #moveListModal {
+    /* Modals Universels (Movelist & Roster) */
+    .modal-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.88);
       backdrop-filter: blur(12px);
       z-index: 200;
       display: none;
@@ -141,11 +142,11 @@
       background: #0f0a1e;
       border: 2px solid #f59e0b;
       border-radius: 24px;
-      max-width: 900px;
+      max-width: 980px;
       width: 100%;
-      max-height: 85vh;
+      max-height: 88vh;
       overflow-y: auto;
-      padding: 28px;
+      padding: 26px;
       box-shadow: 0 0 50px rgba(245, 158, 11, 0.4);
     }
     .modal-header {
@@ -153,12 +154,12 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-      padding-bottom: 16px;
-      margin-bottom: 20px;
+      padding-bottom: 14px;
+      margin-bottom: 18px;
     }
     .modal-title {
       font-family: 'Cinzel', serif;
-      font-size: 1.8rem;
+      font-size: 1.7rem;
       color: #fbbf24;
       font-weight: 900;
     }
@@ -170,39 +171,71 @@
       cursor: pointer;
       font-weight: 900;
     }
-    .moves-grid {
+
+    /* Grille du Roster des 24 combattants */
+    .roster-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
     }
-    .move-card {
+    .roster-card {
       background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 16px;
-    }
-    .move-card-header {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 12px;
       display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s;
     }
-    .move-badge {
-      padding: 3px 8px;
-      border-radius: 8px;
+    .roster-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: #fbbf24;
+      transform: translateY(-2px);
+    }
+    .roster-name {
+      font-weight: 900;
+      font-size: 1.05rem;
+      margin-bottom: 2px;
+    }
+    .roster-title {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      margin-bottom: 8px;
+    }
+    .roster-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .roster-select-btn {
+      flex: 1;
+      padding: 4px 8px;
+      border-radius: 10px;
       font-size: 11px;
       font-weight: 800;
-      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s;
     }
-    .move-name {
-      font-weight: 800;
-      font-size: 1rem;
-      color: #ffffff;
+    .btn-p1 {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border-color: rgba(245, 158, 11, 0.4);
     }
-    .move-desc {
-      font-size: 0.88rem;
-      color: #94a3b8;
-      line-height: 1.5;
+    .btn-p1:hover {
+      background: #f59e0b;
+      color: #000;
+    }
+    .btn-p2 {
+      background: rgba(56, 189, 248, 0.2);
+      color: #38bdf8;
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+    .btn-p2:hover {
+      background: #38bdf8;
+      color: #000;
     }
   </style>
 </head>
@@ -213,27 +246,19 @@
     <div id="topBar">
       <div class="top-left">
         <a href="index.html" class="game-btn">← Retour au Site</a>
-        <button class="game-btn" onclick="openMoveList()">📋 Liste des Coups</button>
+        <button class="game-btn" onclick="openRoster()">👥 24 Combattants</button>
+        <button class="game-btn" onclick="openMoveList()">📋 Guide des Coups</button>
         <button id="fullscreenBtn" class="game-btn" onclick="toggleFullscreen()">⛶ Plein Écran</button>
       </div>
 
       <div class="top-right">
-        <!-- Sélecteur de Héros P1 -->
+        <!-- Sélecteur P1 -->
         <span style="font-size: 12px; font-weight: 700; color: #fbbf24;">Joueur 1 :</span>
-        <select id="p1Select" class="select-btn" onchange="changeFighters()">
-          <option value="sola" selected>SOLA (Solaire)</option>
-          <option value="aether">AETHER (Foudre)</option>
-          <option value="nox">NOX (Ombre)</option>
-          <option value="titan">TITAN KRONOS (Boss)</option>
-        </select>
+        <select id="p1Select" class="select-btn" onchange="changeFighters()"></select>
 
+        <!-- Sélecteur P2 -->
         <span style="font-size: 12px; font-weight: 700; color: #38bdf8;">Adversaire :</span>
-        <select id="p2Select" class="select-btn" onchange="changeFighters()">
-          <option value="aether" selected>AETHER (IA)</option>
-          <option value="sola">SOLA (IA)</option>
-          <option value="nox">NOX (IA)</option>
-          <option value="titan">TITAN KRONOS (IA)</option>
-        </select>
+        <select id="p2Select" class="select-btn" onchange="changeFighters()"></select>
 
         <button class="game-btn" onclick="changeFighters()">↻ Relancer</button>
       </div>
@@ -250,81 +275,36 @@
       <button class="mode-tab" onclick="switchMode('titan', this)">☠ Défi Titan Colosse</button>
     </div>
 
-    <!-- Modal Liste des Coups -->
-    <div id="moveListModal">
+    <!-- Modal 1 : ROSTER VISUEL DES 24 COMBATTANTS -->
+    <div id="rosterModal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">👥 Roster Officiel : Les 24 Combattants Célestes</h2>
+          <button class="close-btn" onclick="closeRoster()">&times;</button>
+        </div>
+        <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 12px;">
+          Clique sur un héros pour l'assigner instantanément au <strong>Joueur 1 (P1)</strong> ou à l'<strong>Adversaire (P2)</strong>. Chaque combattant possède son propre archétype, combo 3 coups, smash chargé, tir spécifique et attaque Ultra.
+        </p>
+        <div class="roster-grid" id="rosterCardsContainer"></div>
+      </div>
+    </div>
+
+    <!-- Modal 2 : GUIDE DÉTAILLÉ DES COUPS -->
+    <div id="moveListModal" class="modal-overlay">
       <div class="modal-content">
         <div class="modal-header">
           <h2 class="modal-title">⚔️ Guide des Coups & Attaques Célestes</h2>
           <button class="close-btn" onclick="closeMoveList()">&times;</button>
         </div>
 
-        <div style="margin-bottom: 20px; font-size: 0.95rem; color: #cbd5e1; line-height: 1.6;">
-          Chaque combattant possède un style de combat unique inspiré des mangas d'arts martiaux : combos 3 coups distincts, coups Smash chargés avec jauge circulaire de Ki, tirs spécifiques, attaques aériennes plongeantes, brise-garde et Contre Parfait.
+        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 18px; flex-wrap: wrap;">
+          <label style="font-weight: 700; color: #fbbf24;">Afficher les coups de :</label>
+          <select id="guideFighterSelect" class="select-btn" onchange="renderGuideFighter()" style="max-width: 280px;"></select>
         </div>
 
-        <div class="moves-grid">
-          <!-- Carte 1 : SOLA -->
-          <div class="move-card" style="border-color: rgba(245, 158, 11, 0.4);">
-            <div class="move-card-header">
-              <span class="move-badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">SOLA</span>
-              <span class="move-name">Guerrière Solaire du Zénith</span>
-            </div>
-            <p class="move-desc">
-              • <strong>Combo 3 Coups</strong> : Jab Solaire ➔ Double Coup Zénith ➔ Rising Sol Uppercut propulsant en l'air.<br>
-              • <strong>Coup Chargé (Smash)</strong> : Giga Smash Solaire avec déflagration Supernova.<br>
-              • <strong>Tir Spécial (Bouton TIR)</strong> : Rayon Solaire Nova continu qui traverse l'arène.<br>
-              • <strong>Attaque Aérienne</strong> : Météore Solaire Plongeant vers le sol.<br>
-              • <strong>Ultra Céleste</strong> : Éveil Solaire Suprême (60 dégâts massifs).
-            </p>
-          </div>
+        <div id="guideFighterDetails" style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 22px;"></div>
 
-          <!-- Carte 2 : AETHER -->
-          <div class="move-card" style="border-color: rgba(6, 182, 212, 0.4);">
-            <div class="move-card-header">
-              <span class="move-badge" style="background: rgba(6, 182, 212, 0.2); color: #38bdf8;">AETHER</span>
-              <span class="move-name">Dieu Céleste de la Foudre</span>
-            </div>
-            <p class="move-desc">
-              • <strong>Combo 3 Coups</strong> : Frappe Tonnerre ➔ Coude Foudroyant ➔ Volt Kick électrostatique.<br>
-              • <strong>Coup Chargé (Smash)</strong> : Raikiri Foudroyant perçant avec traînée d'éclairs SSJ2.<br>
-              • <strong>Tir Spécial (Bouton TIR)</strong> : 3 Lances de Foudre Raijin rapides en éventail.<br>
-              • <strong>Attaque Aérienne</strong> : Volt Drill tournoyant horizontalement.<br>
-              • <strong>Ultra Céleste</strong> : Jugement Divin du Temple de l'Éclair.
-            </p>
-          </div>
-
-          <!-- Carte 3 : NOX -->
-          <div class="move-card" style="border-color: rgba(139, 92, 246, 0.4);">
-            <div class="move-card-header">
-              <span class="move-badge" style="background: rgba(139, 92, 246, 0.2); color: #c084fc;">NOX</span>
-              <span class="move-name">Ombre Astrale du Silence</span>
-            </div>
-            <p class="move-desc">
-              • <strong>Combo 3 Coups</strong> : Lame du Néant ➔ Tranchant Spectral ➔ Eclipse Spin Nova.<br>
-              • <strong>Coup Chargé (Smash)</strong> : Faux de l'Éclipse tranchant l'espace.<br>
-              • <strong>Tir Spécial (Bouton TIR)</strong> : Singularité du Néant aspirant l'adversaire avant d'exploser.<br>
-              • <strong>Attaque Aérienne</strong> : Chute de l'Ombre Perforante.<br>
-              • <strong>Ultra Céleste</strong> : Effondrement Total du Trou Noir.
-            </p>
-          </div>
-
-          <!-- Carte 4 : TITAN KRONOS -->
-          <div class="move-card" style="border-color: rgba(239, 68, 68, 0.4);">
-            <div class="move-card-header">
-              <span class="move-badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171;">TITAN KRONOS</span>
-              <span class="move-name">Colosse Primordial</span>
-            </div>
-            <p class="move-desc">
-              • <strong>Super Armure</strong> : Résiste aux reculs normaux.<br>
-              • <strong>Combo 3 Coups</strong> : Poing Sismique ➔ Revers Magmatique ➔ Fracas Colossal au Sol.<br>
-              • <strong>Coup Chargé (Smash)</strong> : Écrasement Titanesque avec double onde de choc bilatérale.<br>
-              • <strong>Tir Spécial (Bouton TIR)</strong> : Météore de Roche Volcanique en cloche lourde.<br>
-              • <strong>Ultra Céleste</strong> : Cataclysme Tellurique Mondial.
-            </p>
-          </div>
-        </div>
-
-        <div style="margin-top: 24px; text-align: center;">
+        <div style="margin-top: 22px; text-align: center;">
           <button class="game-btn" onclick="closeMoveList()" style="padding: 10px 24px; font-size: 15px;">Fermer le Guide</button>
         </div>
       </div>
@@ -337,9 +317,129 @@
     let currentMode = 'versus';
 
     window.addEventListener('load', () => {
+      populateDropdowns();
+      populateRosterGrid();
+      populateGuideDropdown();
       game = new SkyChordGame('battleCanvas');
       changeFighters();
     });
+
+    function populateDropdowns() {
+      const p1Sel = document.getElementById('p1Select');
+      const p2Sel = document.getElementById('p2Select');
+      p1Sel.innerHTML = '';
+      p2Sel.innerHTML = '';
+
+      const keys = Object.keys(window.FIGHTERS_DATA);
+      keys.forEach((k, idx) => {
+        const f = window.FIGHTERS_DATA[k];
+        const opt1 = document.createElement('option');
+        opt1.value = f.id;
+        opt1.textContent = `${idx + 1}. ${f.name} (${f.archetype.split('•')[0].trim()})`;
+        if (f.id === 'sola') opt1.selected = true;
+        p1Sel.appendChild(opt1);
+
+        const opt2 = document.createElement('option');
+        opt2.value = f.id;
+        opt2.textContent = `${idx + 1}. ${f.name} (${f.archetype.split('•')[0].trim()})`;
+        if (f.id === 'aether') opt2.selected = true;
+        p2Sel.appendChild(opt2);
+      });
+    }
+
+    function populateRosterGrid() {
+      const cont = document.getElementById('rosterCardsContainer');
+      cont.innerHTML = '';
+      const keys = Object.keys(window.FIGHTERS_DATA);
+
+      keys.forEach((k, idx) => {
+        const f = window.FIGHTERS_DATA[k];
+        const card = document.createElement('div');
+        card.className = 'roster-card';
+        card.style.borderColor = f.accent;
+
+        card.innerHTML = `
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:11px; font-weight:800; color:${f.accent};">#${idx + 1}</span>
+              <span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:${f.accent}; box-shadow:0 0 8px ${f.accent};"></span>
+            </div>
+            <div class="roster-name" style="color:#ffffff;">${f.name}</div>
+            <div class="roster-title">${f.title}</div>
+            <div style="font-size:0.75rem; color:#cbd5e1; margin-bottom:6px;">${f.archetype}</div>
+          </div>
+          <div class="roster-actions">
+            <button class="roster-select-btn btn-p1" onclick="selectFromRoster('${f.id}', 1)">Prendre P1</button>
+            <button class="roster-select-btn btn-p2" onclick="selectFromRoster('${f.id}', 2)">Prendre P2</button>
+          </div>
+        `;
+        cont.appendChild(card);
+      });
+    }
+
+    function selectFromRoster(id, playerNum) {
+      if (playerNum === 1) {
+        document.getElementById('p1Select').value = id;
+      } else {
+        document.getElementById('p2Select').value = id;
+      }
+      changeFighters();
+      closeRoster();
+    }
+
+    function populateGuideDropdown() {
+      const sel = document.getElementById('guideFighterSelect');
+      sel.innerHTML = '';
+      const keys = Object.keys(window.FIGHTERS_DATA);
+      keys.forEach(k => {
+        const f = window.FIGHTERS_DATA[k];
+        const opt = document.createElement('option');
+        opt.value = f.id;
+        opt.textContent = `${f.name} — ${f.title}`;
+        sel.appendChild(opt);
+      });
+      renderGuideFighter();
+    }
+
+    function renderGuideFighter() {
+      const id = document.getElementById('guideFighterSelect').value || 'sola';
+      const f = window.FIGHTERS_DATA[id] || window.FIGHTERS_DATA.sola;
+      const el = document.getElementById('guideFighterDetails');
+
+      el.innerHTML = `
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+          <div style="width:24px; height:24px; border-radius:50%; background:${f.accent}; box-shadow:0 0 14px ${f.accent};"></div>
+          <div>
+            <h3 style="font-size:1.4rem; color:${f.accent}; font-weight:900;">${f.name}</h3>
+            <p style="font-size:0.9rem; color:#94a3b8;">${f.title} • ${f.archetype}</p>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:12px; font-size:0.95rem; color:#e2e8f0; line-height:1.6;">
+          <div><strong style="color:#ef4444; background:rgba(239,68,68,0.2); padding:2px 8px; border-radius:6px; font-family:monospace;">COMBO 3 COUPS</strong> (Tap FRAPPE) : 
+            1. ${f.moves.combo[0]} ➔ 2. ${f.moves.combo[1]} ➔ 3. <strong>${f.moves.combo[2]}</strong> (Finisher propulsant).
+          </div>
+          <div><strong style="color:#f59e0b; background:rgba(245,158,11,0.2); padding:2px 8px; border-radius:6px; font-family:monospace;">COUP SMASH CHARGÉ</strong> (Maintien FRAPPE) : 
+            <strong>${f.moves.smash}</strong> (Charge de Ki circulaire et relâchement lourd).
+          </div>
+          <div><strong style="color:#06b6d4; background:rgba(6,182,212,0.2); padding:2px 8px; border-radius:6px; font-family:monospace;">TIR SPÉCIFIQUE</strong> (Bouton TIR) : 
+            <strong>${f.moves.special}</strong>.
+          </div>
+          <div><strong style="color:#10b981; background:rgba(16,185,129,0.2); padding:2px 8px; border-radius:6px; font-family:monospace;">ATTAQUE AÉRIENNE</strong> (Saut + Frappe) : 
+            <strong>${f.moves.air}</strong>.
+          </div>
+          <div><strong style="color:#ec4899; background:rgba(236,72,153,0.2); padding:2px 8px; border-radius:6px; font-family:monospace;">PRISE BRISE-GARDE</strong> (Bouton PRISE) : 
+            <strong>${f.moves.grab}</strong>.
+          </div>
+          <div><strong style="color:#8b5cf6; background:rgba(139,92,246,0.2); padding:2px 8px; border-radius:6px; font-family:monospace;">PARADE PARFAITE</strong> (GARDE au bon timing) : 
+            Gèle l'adversaire et garantit un contre immédiat !
+          </div>
+          <div style="padding-top:8px; border-top:1px solid rgba(255,255,255,0.1);"><strong style="color:#f43f5e; background:rgba(244,63,94,0.25); padding:3px 10px; border-radius:6px; font-family:monospace;">ULTRA CÉLESTE</strong> (Quand Ki = 100%) : 
+            <span style="color:#fbbf24; font-weight:900;">${f.moves.ultra}</span> (Cut-in manga en gros plan et 60 dégâts !).
+          </div>
+        </div>
+      `;
+    }
 
     function changeFighters() {
       const p1 = document.getElementById('p1Select').value;
@@ -356,8 +456,17 @@
       changeFighters();
     }
 
+    function openRoster() {
+      document.getElementById('rosterModal').style.display = 'flex';
+    }
+
+    function closeRoster() {
+      document.getElementById('rosterModal').style.display = 'none';
+    }
+
     function openMoveList() {
       document.getElementById('moveListModal').style.display = 'flex';
+      renderGuideFighter();
     }
 
     function closeMoveList() {
