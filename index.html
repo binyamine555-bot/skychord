@@ -1,74 +1,539 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SkyChord — Le jeu musical</title>
-  <meta name="description" content="SkyChord est un jeu musical où tu crées des mélodies, résous des énigmes sonores et explores un univers céleste.">
+  <title>SkyChord — L'Aventure Musicale Céleste</title>
+  <meta name="description" content="SkyChord est un jeu d'aventure et d'énigmes musicales dans un univers céleste. Compose des accords éthérés, relie les constellations et réveille les mondes endormis.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Cinzel:wght@600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/jpeg" href="assets/logo_skychord.jpg">
 </head>
 <body>
-  <header>
-    <nav>
-      <div class="logo">Sky<span>Chord</span></div>
-      <ul>
-        <li><a href="#accueil">Accueil</a></li>
-        <li><a href="#jeu">Le jeu</a></li>
-        <li><a href="#fonctions">Fonctionnalités</a></li>
-        <li><a href="#jouer">Jouer</a></li>
-      </ul>
-    </nav>
+
+  <!-- Toile de fond constellation interactive -->
+  <canvas id="constellationCanvas"></canvas>
+
+  <!-- En-tête / Navigation -->
+  <header id="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="brand">
+        <div class="brand-orb">
+          <img src="assets/logo_skychord.jpg" alt="SkyChord Rune" class="brand-logo-img">
+        </div>
+        <span class="brand-text">SKY<span>CHORD</span></span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#hero">Accueil</a>
+        <a href="#sanctuaire">Sanctuaire Sonore</a>
+        <a href="#mondes">Les 5 Sphères</a>
+        <a href="#gameplay">Gameplay</a>
+        <a href="#lore">Le Lore</a>
+        <a href="#playtest">Rejoindre l'Alpha</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="ambientSoundBtn" class="audio-toggle-btn" title="Activer / Couper l'ambiance céleste" aria-label="Audio céleste">
+          <svg class="sound-icon-on" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+          <svg class="sound-icon-off hidden" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+          <span class="audio-label">Ambiance</span>
+        </button>
+        <a href="#sanctuaire" class="cta-pill">Jouer la Démo</a>
+      </div>
+
+      <!-- Menu Mobile Hamburger -->
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu de navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </header>
 
   <main>
-    <section id="accueil" class="hero">
-      <h1>Crée ta musique,<br>conquiers le ciel.</h1>
-      <p>SkyChord est un jeu musical où chaque accord débloque un nouveau monde. Joue, improvise et fais vibrer les étoiles.</p>
-      <a class="btn" href="#jouer">Jouer maintenant</a>
-    </section>
+    <!-- HERO SECTION -->
+    <section id="hero" class="hero-section">
+      <div class="hero-glow-sphere left"></div>
+      <div class="hero-glow-sphere right"></div>
 
-    <section id="jeu">
-      <h2>Le concept</h2>
-      <p>Dans SkyChord, tu progresses en associant des notes et des accords pour résoudre des défis musicaux. Plus ton rythme est juste, plus ton univers s’ouvre.</p>
-      <div class="cards">
-        <article class="card">
-          <h3>🎹 Accords</h3>
-          <p>Compose des progressions d’accords pour activer les portails célestes.</p>
-        </article>
-        <article class="card">
-          <h3>🌌 Exploration</h3>
-          <p>Explore des mondes générés autour de la musique et des constellations.</p>
-        </article>
-        <article class="card">
-          <h3>🏆 Défis</h3>
-          <p>Réalise des séquences rythmiques et débloque des récompenses.</p>
-        </article>
+      <div class="hero-content">
+        <div class="badge-celeste">
+          <span class="badge-dot"></span>
+          <span>Projet Original • En Développement Actif</span>
+        </div>
+
+        <h1 class="hero-title">
+          Fais vibrer les étoiles.<br>
+          <span class="gradient-text">Chaque accord réveille un monde.</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          <strong>SkyChord</strong> fusionne l’exploration onirique, l'harmonie musicale et la précision rythmique. 
+          Manie les cordes célestes, résous des énigmes de polyphonie et repousse le Silence Obscur qui menace le cosmos.
+        </p>
+
+        <div class="hero-buttons">
+          <a href="#sanctuaire" class="btn btn-primary glow-effect">
+            <span class="btn-sparkle">✦</span>
+            <span>Tester le Sanctuaire (Démo Directe)</span>
+          </a>
+          <a href="#mondes" class="btn btn-secondary">
+            <span>Explorer les Sphères</span>
+            <span class="btn-arrow">→</span>
+          </a>
+        </div>
+
+        <!-- Statistiques rapides -->
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number">5</div>
+            <div class="stat-label">Sphères Célestes</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-number">48+</div>
+            <div class="stat-label">Accords & Fréquences</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Audio Synthèse Live</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-number">0 €</div>
+            <div class="stat-label">Démo Gratuite en Ligne</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Visual Card / Interactive Preview -->
+      <div class="hero-card-container">
+        <div class="hero-frame glass-panel">
+          <div class="frame-header">
+            <span class="frame-dot red"></span>
+            <span class="frame-dot yellow"></span>
+            <span class="frame-dot green"></span>
+            <span class="frame-title">CANVAS HARMONIQUE V2.4 • OSCILLATEUR EN DIRECT</span>
+          </div>
+
+          <div class="hero-visualizer-wrapper">
+            <canvas id="heroVisualizerCanvas"></canvas>
+            <div class="visualizer-overlay-hint">
+              <span class="pulse-note">♪</span>
+              <span>Touche les accords ci-dessous pour sculpter les ondes</span>
+            </div>
+          </div>
+
+          <div class="hero-mini-chords">
+            <button class="mini-chord-btn" data-chord="Cmaj9">Do M9</button>
+            <button class="mini-chord-btn" data-chord="Am11">La m11</button>
+            <button class="mini-chord-btn" data-chord="Fmaj7">Fa M7</button>
+            <button class="mini-chord-btn" data-chord="G9sus4">Sol 9sus</button>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section id="fonctions">
-      <h2>Fonctionnalités</h2>
-      <ul class="features">
-        <li>Interface simple et colorée</li>
-        <li>Mode solo avec progression</li>
-        <li>Mini-jeux musicaux</li>
-        <li>Sons et animations interactives</li>
-        <li>Compatible mobile et ordinateur</li>
-      </ul>
+    <!-- SECTION SANCTUAIRE SONORE (DÉMO INTERACTIVE COMPLÈTE) -->
+    <section id="sanctuaire" class="sanctuary-section">
+      <div class="section-header">
+        <div class="section-tag">DÉMO IMMERSIVE JOUABLE</div>
+        <h2 class="section-title">Le Sanctuaire Sonore</h2>
+        <p class="section-desc">
+          Teste immédiatement le moteur de synthèse de SkyChord directement dans ton navigateur. 
+          Chaque accord déclenche des oscillateurs résonants, une réverbération spatiale et une illumination de constellation.
+        </p>
+      </div>
+
+      <div class="sanctuary-workbench glass-panel">
+        <!-- Barre de contrôle du synthétiseur -->
+        <div class="synth-controls-bar">
+          <div class="synth-mode-selector">
+            <button class="mode-pill active" data-preset="celeste">Pad Céleste</button>
+            <button class="mode-pill" data-preset="cristal">Cloches de Cristal</button>
+            <button class="mode-pill" data-preset="abysse">Basse Stellaire</button>
+            <button class="mode-pill" data-preset="arpege">Flux d'Aurore</button>
+          </div>
+
+          <div class="synth-sliders">
+            <div class="slider-group">
+              <label for="reverbSlider">Résonance</label>
+              <input type="range" id="reverbSlider" min="0" max="100" value="70">
+            </div>
+            <div class="slider-group">
+              <label for="tempoSlider">Éclat (Filtre)</label>
+              <input type="range" id="filterSlider" min="200" max="8000" value="3200">
+            </div>
+            <button id="arpeggiatorToggle" class="btn-toggle-arp">
+              <span class="arp-dot"></span>
+              <span>Arpégiateur</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Grand Oscilloscope Céleste -->
+        <div class="oscilloscope-container">
+          <canvas id="scopeCanvas"></canvas>
+          <div class="scope-legend">
+            <span id="currentChordName">Accord Actuel : En attente d'impulsion...</span>
+            <span id="currentChordFreq">Fréquences : 432 Hz Purifié</span>
+          </div>
+        </div>
+
+        <!-- Les 6 Tablettes d'Accords Stellaires -->
+        <div class="chord-pads-grid">
+          <div class="chord-pad" data-chord="0" tabindex="0" role="button">
+            <div class="pad-keyboard-hint">Touche [ 1 ]</div>
+            <div class="pad-symbol">✦</div>
+            <div class="pad-name">Aura Céleste</div>
+            <div class="pad-notes">Cmaj9 • Do-Mi-Sol-Si-Ré</div>
+            <div class="pad-element element-light">Harmonie Pure</div>
+          </div>
+
+          <div class="chord-pad" data-chord="1" tabindex="0" role="button">
+            <div class="pad-keyboard-hint">Touche [ 2 ]</div>
+            <div class="pad-symbol">✺</div>
+            <div class="pad-name">Brume d'Améthyste</div>
+            <div class="pad-notes">Am11 • La-Do-Mi-Sol-Ré</div>
+            <div class="pad-element element-ether">Éther Lunaire</div>
+          </div>
+
+          <div class="chord-pad" data-chord="2" tabindex="0" role="button">
+            <div class="pad-keyboard-hint">Touche [ 3 ]</div>
+            <div class="pad-symbol">❂</div>
+            <div class="pad-name">Éclat Solaire</div>
+            <div class="pad-notes">Fmaj7#11 • Fa-La-Do-Mi-Si</div>
+            <div class="pad-element element-fire">Rayonnement</div>
+          </div>
+
+          <div class="chord-pad" data-chord="3" tabindex="0" role="button">
+            <div class="pad-keyboard-hint">Touche [ 4 ]</div>
+            <div class="pad-symbol">🌀</div>
+            <div class="pad-name">Vortex Sidéral</div>
+            <div class="pad-notes">Em9 • Mi-Sol-Si-Ré-Fa#</div>
+            <div class="pad-element element-void">Gravité</div>
+          </div>
+
+          <div class="chord-pad" data-chord="4" tabindex="0" role="button">
+            <div class="pad-keyboard-hint">Touche [ 5 ]</div>
+            <div class="pad-symbol">❄</div>
+            <div class="pad-name">Aurore Boréale</div>
+            <div class="pad-notes">Dm9 • Ré-Fa-La-Do-Mi</div>
+            <div class="pad-element element-frost">Onde de Givre</div>
+          </div>
+
+          <div class="chord-pad" data-chord="5" tabindex="0" role="button">
+            <div class="pad-keyboard-hint">Touche [ 6 ]</div>
+            <div class="pad-symbol">🪐</div>
+            <div class="pad-name">Constellation Finale</div>
+            <div class="pad-notes">Gsus4(add9) • Sol-Do-Ré-La</div>
+            <div class="pad-element element-cosmic">Convergence</div>
+          </div>
+        </div>
+
+        <!-- Ruban Tactile d'Improvisation (Ribbon Controller) -->
+        <div class="ribbon-controller" id="ribbonController">
+          <div class="ribbon-track">
+            <div class="ribbon-glow" id="ribbonGlow"></div>
+            <div class="ribbon-label">Glisse la souris ou le doigt ici pour balayer les fréquences cosmiques (Theremin Céleste)</div>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section id="jouer" class="cta">
-      <h2>Prêt à jouer ?</h2>
-      <p>Le prototype web de SkyChord arrive bientôt. Reviens bientôt pour tester la première démo !</p>
-      <button id="playBtn" class="btn">Lancer la démo</button>
-      <p id="demoMessage" class="hidden">🎵 Démo bientôt disponible : prépare tes accords !</p>
+    <!-- SECTION LES 5 SPHÈRES D'HARMONIE (MONDES DU JEU) -->
+    <section id="mondes" class="worlds-section">
+      <div class="section-header">
+        <div class="section-tag">UNIVERS ET ENVIRONNEMENTS</div>
+        <h2 class="section-title">Les 5 Sphères d'Harmonie</h2>
+        <p class="section-desc">
+          Chaque monde obéit à sa propre tonalité, son tempo intrinsèque et sa palette d'instruments spectraux.
+        </p>
+      </div>
+
+      <div class="worlds-carousel">
+        <!-- Sphère 1 -->
+        <div class="world-card glass-panel" data-theme="astralia">
+          <div class="world-badge">SPHÈRE 01 • Lydien</div>
+          <div class="world-art-glow cyan"></div>
+          <div class="world-icon">🏛️</div>
+          <h3 class="world-title">Astralia</h3>
+          <p class="world-subtitle">La Cité des Flûtes de Verre</p>
+          <p class="world-desc">
+            Suspendue au-dessus d'une mer de nuages nacrés, Astralia résonne au gré des brises solaires. 
+            Les orgues de cristal y activent d'anciennes nefs propulsées par les consonances parfaites.
+          </p>
+          <div class="world-meta">
+            <span class="meta-tag">Tempo : 96 BPM</span>
+            <span class="meta-tag">Clé : Ré Majeur Céleste</span>
+          </div>
+          <button class="world-listen-btn" data-world-chord="Cmaj9">Écouter la Sphère ♬</button>
+        </div>
+
+        <!-- Sphère 2 -->
+        <div class="world-card glass-panel" data-theme="nebula">
+          <div class="world-badge">SPHÈRE 02 • Dorien</div>
+          <div class="world-art-glow violet"></div>
+          <div class="world-icon">🌌</div>
+          <h3 class="world-title">Nébula Prime</h3>
+          <p class="world-subtitle">L'Archipel des Étoiles Mouvantes</p>
+          <p class="world-desc">
+            Dans ce sanctuaire d'améthyste, chaque météorite est une note suspendue dans le vide. 
+            Relie les éclats cosmiques par des tierces mineures pour stabiliser les ponts lumineux.
+          </p>
+          <div class="world-meta">
+            <span class="meta-tag">Tempo : 112 BPM</span>
+            <span class="meta-tag">Clé : La Mineur Flottant</span>
+          </div>
+          <button class="world-listen-btn" data-world-chord="Am11">Écouter la Sphère ♬</button>
+        </div>
+
+        <!-- Sphère 3 -->
+        <div class="world-card glass-panel" data-theme="chrono">
+          <div class="world-badge">SPHÈRE 03 • Mixolydien</div>
+          <div class="world-art-glow gold"></div>
+          <div class="world-icon">⏳</div>
+          <h3 class="world-title">Chrono-Caelum</h3>
+          <p class="world-subtitle">L'Horloge Polyrythmique</p>
+          <p class="world-desc">
+            Un gigantesque astrolabe mécanique tournant au rythme d'une mesure à 7/8. 
+            Ralentis le temps en allongeant les silences, ou accélère la chute des comètes grâce aux staccatos.
+          </p>
+          <div class="world-meta">
+            <span class="meta-tag">Tempo : 140 BPM (7/8)</span>
+            <span class="meta-tag">Clé : Sol Dominant 9</span>
+          </div>
+          <button class="world-listen-btn" data-world-chord="G9sus4">Écouter la Sphère ♬</button>
+        </div>
+
+        <!-- Sphère 4 -->
+        <div class="world-card glass-panel" data-theme="abysse">
+          <div class="world-badge">SPHÈRE 04 • Phrygien</div>
+          <div class="world-art-glow rose"></div>
+          <div class="world-icon">🕳️</div>
+          <h3 class="world-title">L'Abysse Résonant</h3>
+          <p class="world-subtitle">Les Tréfonds des Basses Lourdes</p>
+          <p class="world-desc">
+            Le royaume des fréquences sub-basses et des échos oubliés. Seules les ondes de choc harmoniques 
+            peuvent percer la carapace d'obsidienne des créatures qui se nourrissent du silence.
+          </p>
+          <div class="world-meta">
+            <span class="meta-tag">Tempo : 80 BPM</span>
+            <span class="meta-tag">Clé : Mi Phrygien Obscur</span>
+          </div>
+          <button class="world-listen-btn" data-world-chord="Em9">Écouter la Sphère ♬</button>
+        </div>
+
+        <!-- Sphère 5 -->
+        <div class="world-card glass-panel" data-theme="zenith">
+          <div class="world-badge">SPHÈRE 05 • Ionien Pur</div>
+          <div class="world-art-glow white"></div>
+          <div class="world-icon">✨</div>
+          <h3 class="world-title">Le Zénith Pur</h3>
+          <p class="world-subtitle">Le Chœur des Origines</p>
+          <p class="world-desc">
+            Le sommet ultime où convergent toutes les fréquences du cosmos. L'ultime partition requiert 
+            la maîtrise de l'ensemble des 48 accords fondamentaux pour reconstituer le Chant Primordial.
+          </p>
+          <div class="world-meta">
+            <span class="meta-tag">Tempo : Variable</span>
+            <span class="meta-tag">Clé : Polyphonie Universelle</span>
+          </div>
+          <button class="world-listen-btn" data-world-chord="Fmaj7">Écouter la Sphère ♬</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION GAMEPLAY & SYSTÈMES -->
+    <section id="gameplay" class="gameplay-section">
+      <div class="section-header">
+        <div class="section-tag">MÉCANIQUES DE JEU</div>
+        <h2 class="section-title">Une Alchimie Rythmique Innovante</h2>
+        <p class="section-desc">
+          Ni un simple jeu de rythme, ni un casse-tête abstrait : SkyChord fait de la théorie musicale ton arme et ton pinceau.
+        </p>
+      </div>
+
+      <div class="gameplay-grid">
+        <div class="gameplay-item glass-panel">
+          <div class="gameplay-icon-box cyan">
+            <span>⚡</span>
+          </div>
+          <h3>La Clé Harmonique</h3>
+          <p>
+            Chaque portail, pont ou mécanisme céleste possède une résonance propre. 
+            Découvre la combinaison d'accords qui entre en syntonie parfaite pour déverrouiller le passage.
+          </p>
+          <ul class="gameplay-checks">
+            <li>Reconnaissance auditive instinctive</li>
+            <li>Aide visuelle spectrale pour débutants</li>
+            <li>Variations infinies selon les modes</li>
+          </ul>
+        </div>
+
+        <div class="gameplay-item glass-panel">
+          <div class="gameplay-icon-box violet">
+            <span>🌌</span>
+          </div>
+          <h3>Tissage de Constellations</h3>
+          <p>
+            Relie les étoiles en plein vol en traçant des intervalles musicaux (quinte, quarte, octave). 
+            Plus ta ligne mélodique est fluide, plus ton personnage plane haut dans la stratosphère.
+          </p>
+          <ul class="gameplay-checks">
+            <li>Physique aérienne dynamique</li>
+            <li>Propulsion rythmée aux battements du monde</li>
+            <li>Figures acrobatiques sonores</li>
+          </ul>
+        </div>
+
+        <div class="gameplay-item glass-panel">
+          <div class="gameplay-icon-box gold">
+            <span>🛡️</span>
+          </div>
+          <h3>Duels de Dissonance</h3>
+          <p>
+            Les Ombres Silencieuses tentent d'éteindre le son des mondes. 
+            Contrecarre leurs ondes destructrices en leur opposant des accords antagonistes en temps réel.
+          </p>
+          <ul class="gameplay-checks">
+            <li>Parades en contretemps parfait</li>
+            <li>Smashs polyphoniques dévastateurs</li>
+            <li>Patterns de boss symphoniques</li>
+          </ul>
+        </div>
+
+        <div class="gameplay-item glass-panel">
+          <div class="gameplay-icon-box pink">
+            <span>🎨</span>
+          </div>
+          <h3>Studio & Mode Improvisation</h3>
+          <p>
+            Enregistre tes propres compositions, façonne tes bandes-son avec les synthétiseurs débloqués 
+            et partage tes partitions stellaires avec l'ensemble des joueurs du monde entier.
+          </p>
+          <ul class="gameplay-checks">
+            <li>Export MIDI et pistes audio haute fidélité</li>
+            <li>Partage de niveaux musicaux créés par la communauté</li>
+            <li>Mode sans échec pour la pure relaxation</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION LORE & PERSONNAGES -->
+    <section id="lore" class="lore-section">
+      <div class="lore-container glass-panel">
+        <div class="lore-text">
+          <div class="section-tag">LE RÉCIT DE L'UNIVERS</div>
+          <h2>Le Mythe du Premier Accord</h2>
+          <p>
+            Au commencement régnait le <em>Silence Primordial</em>, une étendue glacée et immobile. 
+            Puis retentit l'<strong>Accord des Origines</strong> : une onde pure qui fragmenta le néant 
+            et donna naissance aux cinq Sphères d'Harmonie, peuplées d'étoiles vibrantes.
+          </p>
+          <p>
+            Mais avec les millénaires, la résonance s'atténue. Les accords se dérèglent, les ponts célestes 
+            s'effondrent et le Silence Obscur dévore une à une les constellations.
+          </p>
+          <p>
+            Tu incarnes <strong>Lyra</strong>, la dernière <em>Accordeur Céleste</em>. Portant le diapason d'Aura, 
+            ta quête est de réaccorder les cinq Sphères avant que le silence n'éteigne le firmament.
+          </p>
+          <div class="lore-signature">
+            <span class="lore-rune">♮ ♯ ♭ 𝄢 𝄞</span>
+            <span>— Chroniques des Gardiens de la Partition</span>
+          </div>
+        </div>
+
+        <div class="lore-visual">
+          <div class="resonance-ring-system">
+            <div class="ring ring-1"></div>
+            <div class="ring ring-2"></div>
+            <div class="ring ring-3"></div>
+            <div class="center-star-emblem">
+              <img src="assets/logo_skychord.jpg" alt="Emblème de l'Harmonie" class="lore-emblem-img">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION REJOINDRE L'ALPHA / PLAYTEST -->
+    <section id="playtest" class="playtest-section">
+      <div class="playtest-box glass-panel glow-card">
+        <div class="section-tag">INSCRIPTION PLAYTEST PRIVÉ</div>
+        <h2>Prends part à la Symphonie</h2>
+        <p>
+          La première phase d'Alpha fermée de SkyChord débutera prochainement sur Navigateur Web, PC (Steam) et Mobile.
+          Inscris-toi dès maintenant pour recevoir ton invitation prioritaire et débloquer le pack de skins d'accords exclusif <em>« Prisme Stellaire »</em>.
+        </p>
+
+        <form id="betaForm" class="beta-form">
+          <div class="input-wrapper">
+            <input type="email" id="userEmail" placeholder="Entre ton adresse email..." required>
+            <button type="submit" class="btn btn-primary">
+              <span>Rejoindre l'Alpha</span>
+              <span>✦</span>
+            </button>
+          </div>
+          <div id="formFeedback" class="form-feedback hidden"></div>
+        </form>
+
+        <div class="platforms-badges">
+          <span>Plateformes cibles :</span>
+          <span class="badge">🌐 Web (WebGL / Audio)</span>
+          <span class="badge">💻 PC / Mac</span>
+          <span class="badge">📱 Android & iOS</span>
+          <span class="badge">🎮 Steam Deck</span>
+        </div>
+      </div>
     </section>
   </main>
 
+  <!-- PIED DE PAGE -->
   <footer>
-    <p>© 2026 SkyChord — Site vitrine du jeu.</p>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="brand-text">SKY<span>CHORD</span></div>
+        <p>Le jeu d'aventure et de poésie musicale céleste.</p>
+        <p class="copyright">© 2026 SkyChord Studios • Développé avec passion pour la musique et le jeu indépendant.</p>
+      </div>
+
+      <div class="footer-links">
+        <div class="links-col">
+          <h4>Exploration</h4>
+          <a href="#hero">Accueil</a>
+          <a href="#sanctuaire">Sanctuaire Sonore</a>
+          <a href="#mondes">Les 5 Sphères</a>
+          <a href="#gameplay">Gameplay</a>
+        </div>
+        <div class="links-col">
+          <h4>Univers</h4>
+          <a href="#lore">Le Mythe du Premier Accord</a>
+          <a href="#playtest">Rejoindre l'Alpha</a>
+          <a href="https://github.com/binyamine555-bot/skychord" target="_blank" rel="noopener">Code Source GitHub</a>
+        </div>
+        <div class="links-col">
+          <h4>Confidentialité</h4>
+          <a href="https://arenesdesorigines.github.io/politique-confidentialite.html" target="_blank" rel="noopener">Politique de Confidentialité</a>
+          <a href="mailto:arenedesorigines@gmail.com">Contact Développeur</a>
+        </div>
+      </div>
+    </div>
   </footer>
 
+  <!-- SCRIPT PRINCIPAL DU SITE ET SYNTHÉTISEUR WEB AUDIO -->
   <script src="script.js"></script>
 </body>
 </html>

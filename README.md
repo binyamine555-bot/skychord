@@ -1,23 +1,36 @@
-# SkyChord
+# SkyChord 🌌🎹
 
-Site vitrine du jeu **SkyChord**, un jeu musical où le joueur crée des accords, résout des défis rythmiques et explore un univers céleste.
+Site officiel et vitrine interactive du jeu **SkyChord**, une aventure d'exploration et d'énigmes musicales célestes.
 
-## Site en ligne
+---
 
-Après avoir activé GitHub Pages sur la branche `main`, le site sera disponible ici :
+## 🌟 Fonctionnalités du site
 
-https://binyamine555-bot.github.io/skychord/
+1. **Sanctuaire Sonore (Démo Web Audio API)** :
+   - Synthétiseur polyphonique en temps réel (Pad Céleste, Cloches de Cristal, Basse Stellaire, Flux d'Aurore).
+   - 6 accords majeurs/mineurs étendus (Do M9, La m11, Fa M7#11, Mi m9, Ré m9, Sol 9sus4).
+   - Oscilloscope en direct analysant les ondes sonores.
+   - Contrôleur ruban tactile (*Theremin Céleste*).
+   - Arpégiateur cosmique automatique.
+   - Ambiance sonore continue (drone cosmique en Do).
 
-## Fichiers
+2. **Toile de fond Constellation interactive** :
+   - Particules célestes interconnectées qui réagissent doucement au curseur.
 
-- `index.html` : page principale
-- `style.css` : design du site
-- `script.js` : interactions simples
+3. **Les 5 Sphères d'Harmonie** :
+   - Exploration des mondes (*Astralia, Nébula Prime, Chrono-Caelum, L'Abysse Résonant, Le Zénith Pur*) avec leurs BPM, modes musicaux et écoute d'accords d'ambiance.
 
-## Activer GitHub Pages
+4. **Gameplay & Lore** :
+   - Système de résolution par syntonie d'accords, tissage d'intervalles en vol, duels harmoniques contre les Ombres Dissonantes.
 
-1. Ouvre **Settings** du dépôt.
-2. Va dans **Pages**.
-3. Dans **Source**, choisis **Deploy from a branch**.
-4. Sélectionne `main` et `/ (root)`.
-5. Clique sur **Save**.
+5. **Inscription Playtest / Alpha** :
+   - Formulaire réactif avec validation et sauvegarde locale (`localStorage`).
+
+---
+
+## 🚀 Déploiement GitHub Pages
+
+Le site est conçu pour tourner sans aucune dépendance (Vanilla HTML5, CSS3 Glassmorphism, Web Audio API moderne) :
+1. Dépôt : `https://github.com/binyamine555-bot/skychord`
+2. Accessible en ligne après activation de GitHub Pages :  
+   **https://binyamine555-bot.github.io/skychord/**
