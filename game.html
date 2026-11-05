@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>SkyChord : Combat Céleste — Dragon Ball Z Kai Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Cinzel:wght@700;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #030008;
+      font-family: 'Outfit', sans-serif;
+      color: #ffffff;
+    }
+    #gameContainer {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, #1e1138 0%, #05020c 100%);
+    }
+    canvas {
+      display: block;
+      box-shadow: 0 0 50px rgba(245, 158, 11, 0.25);
+      border-radius: 6px;
+    }
+    /* Barre supérieure de navigation rapide */
+    #topBar {
+      position: absolute;
+      top: 12px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      pointer-events: none;
+    }
+    .top-left, .top-right {
+      pointer-events: auto;
+      display: flex;
+      gap: 10px;
+    }
+    .game-btn {
+      background: rgba(15, 10, 30, 0.75);
+      border: 1px solid rgba(251, 191, 36, 0.45);
+      color: #fbbf24;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .game-btn:hover, .game-btn:active {
+      background: #f59e0b;
+      color: #000;
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+      transform: scale(1.05);
+    }
+    /* Sélecteur de mode rapide */
+    #modeSelector {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 100;
+      background: rgba(10, 5, 20, 0.85);
+      padding: 6px 12px;
+      border-radius: 30px;
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      backdrop-filter: blur(10px);
+    }
+    .mode-tab {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mode-tab.active, .mode-tab:hover {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.6);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="gameContainer">
+    <!-- Barre du haut -->
+    <div id="topBar">
+      <div class="top-left">
+        <a href="index.html" class="game-btn">← Retour au Site</a>
+        <button id="fullscreenBtn" class="game-btn" onclick="toggleFullscreen()">⛶ Plein Écran</button>
+      </div>
+      <div class="top-right">
+        <button class="game-btn" onclick="game.startMatch(game.mode)">↻ Recommencer</button>
+      </div>
+    </div>
+
+    <!-- Le canevas de jeu -->
+    <canvas id="battleCanvas"></canvas>
+
+    <!-- Sélecteur rapide des modes de combat -->
+    <div id="modeSelector">
+      <button class="mode-tab active" onclick="switchMode('versus', this)">Duel 1v1</button>
+      <button class="mode-tab" onclick="switchMode('histoire', this)">Histoire & Cinématiques</button>
+      <button class="mode-tab" onclick="switchMode('eclair', this)">⚡ Mort Subite</button>
+      <button class="mode-tab" onclick="switchMode('titan', this)">☠ Défi Titan</button>
+    </div>
+  </div>
+
+  <script src="skychord_game.js"></script>
+  <script>
+    let game = null;
+    window.addEventListener('load', () => {
+      game = new SkyChordGame('battleCanvas');
+      game.startMatch('versus', 'sola', 'aether');
+    });
+
+    function switchMode(mode, el) {
+      document.querySelectorAll('.mode-tab').forEach(b => b.classList.remove('active'));
+      if (el) el.classList.add('active');
+      if (game) game.startMatch(mode, 'sola', mode === 'titan' ? 'titan' : 'aether');
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+  </script>
+</body>
+</html>
